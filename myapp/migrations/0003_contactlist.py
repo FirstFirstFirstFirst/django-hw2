@@ -6,18 +6,26 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('myapp', '0002_product_instock'),
+        ("myapp", "0002_product_instock"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='contactList',
+            name="contactList",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('topic', models.CharField(max_length=200)),
-                ('email', models.CharField(max_length=100)),
-                ('detail', models.TextField(blank=True, null=True)),
-                ('complete', models.BooleanField(default=False)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("topic", models.CharField(max_length=200)),
+                ("email", models.CharField(max_length=100)),
+                ("detail", models.TextField(blank=True, null=True)),
+                ("complete", models.BooleanField(default=False)),
             ],
         ),
     ]
