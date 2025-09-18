@@ -1,6 +1,6 @@
 from django.contrib.auth import authenticate, login
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 
 from .models import *
 
@@ -9,10 +9,8 @@ def home(request):
     context = {"pd": allproduct}
     return render(request, "myapp/home.html", context)
 
-
 def aboutUs(request):
     return render(request, "myapp/aboutus.html")
-
 
 def contact(request):
     context = {}
@@ -40,7 +38,6 @@ def contact(request):
         context["message"] = "The message has been received"
     return render(request, "myapp/contact.html", context)
 
-
 def userLogin(request):
     context = {}
     if request.method == "POST":
@@ -51,7 +48,14 @@ def userLogin(request):
         try:
             user = authenticate(username=username, password=password)
             login(request, user)
+            return redirect('home-page')
         except:
             context["message"] = "username or password is incorrect"
 
     return render(request, "myapp.login.html", context)
+
+def showContact(request):
+    allcontact = contactList.objects.all()
+
+    context = {'contact': allcontact}
+    return render(request, 'myapp/showcontact.html', context)
