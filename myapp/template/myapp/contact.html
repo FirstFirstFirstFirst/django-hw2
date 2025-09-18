@@ -1,25 +1,24 @@
-{% extends "myapp/base.html" %}
-
-{% block myheader %}
+{% extends "myapp/base.html" %} {% block myheader %}
 <h1>Contact Us</h1>
-{% endblock myheader %}
-
-{% block content %}
+{% endblock myheader %} {% block content %} {% if message %}
+<h3>{{message}}</h3>
+{% else %}
 <form method="POST" action="">
-    {% csrf_token %} <!-- Cross-site request forgery -->
-    <div class="form-group">
-        <label for="topic">Topic:</label>
-        <input type="text" class="form-control" id="topic" name="topic">
-    </div>
-    <div class="form-group">
-        <label for="email">Email:</label>
-        <input type="text" class="form-control" id="email" name="email">
-    </div>
-    <div class="form-group">
-        <label for="detail">Detail:</label>
-        <textarea class="form-control" rows="5" id="detail" name="detail">
-        </textarea>
-    </div>
-    <button type="submit" class="btn btn-primary">Submit</button>
+  {% csrf_token %}
+  <!-- Cross-site request forgery -->
+  <div class="form-group">
+    <label for="topic">Topic:</label>
+    <input type="text" class="form-control" id="topic" name="topic" />
+  </div>
+  <div class="form-group">
+    <label for="email">Email:</label>
+    <input type="text" class="form-control" id="email" name="email" />
+  </div>
+  <div class="form-group">
+    <label for="detail">Detail:</label>
+    <textarea class="form-control" rows="5" id="detail" name="detail">
+    </textarea>
+  </div>
+  <button type="submit" class="btn btn-primary">Submit</button>
 </form>
-{% endblock content %}
+{% endif %} {% endblock content %}
