@@ -2,9 +2,23 @@
 {% load static %}
 
 {% block myheader %}
-<link rel="stylesheet" href="{% static 'css/myCss.css' %}" />
-<h1><center>Welcome to CoC Gaming Shop</center></h1>
+  <link rel="stylesheet" href="{% static 'css/myCss.css' %}">
+  <h1><center> Welcome to CoC Gaming Shop </center></h1>
+  
+  {% if user.profile.usertype == 'VVIP' %}
+      <center> 15% Discount for VIP member </center>
+  {% elif user.profile.usertype == 'VIP' %}
+      <center> 10% Discount for VIP member </center>
+  {% elif user.profile.usertype == 'MEMBER' %}
+      <center> 5% Discount for VIP member </center>
+  {% elif user.profile.usertype == 'ADMIN' %}
+      <center> Unlimited % Discount for VIP member </center>
+  {% else %}
+      <center> No Discount for non member contact our staff to get one! </center>
+  {% endif %}
+
 {% endblock myheader %}
+
 
 {% block content %}
 <center>

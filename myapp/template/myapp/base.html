@@ -115,7 +115,7 @@
             <a class="me-3 py-2 text-dark text-decoration-none" href="#">Nintendo Switch</a>
 
             {% if user.is_authenticated %}
-              <a class="py-2 text-dark text-decoration-none" href="#">Hello, Admin</a>
+              <a class="py-2 text-dark text-decoration-none" href="#">Hello, {{user.first_name}} [{{user.profile.usertype}}]</a>
               <a class="py-2 text-dark text-decoration-none" href="{% url 'logout' %}">
                 (Log out)
               </a>
@@ -128,14 +128,7 @@
 
         </div>
 
-        <div class="pricing-header p-3 pb-md-4 mx-auto text-center">
-          <h1 class="display-4 fw-normal">Pricing</h1>
-          <p class="fs-5 text-muted">
-            Quickly build an effective pricing table for your potential
-            customers with this Bootstrap example. It's built with default
-            Bootstrap components and utilities with little customization.
-          </p>
-        </div>
+        {% block myheader %}{% endblock myheader %}
       </header>
 
       <main>{% block content %} {% endblock content %}</main>
