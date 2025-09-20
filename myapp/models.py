@@ -13,7 +13,7 @@ class Product(models.Model):
         return self.title
 
 
-class contactList(models.Model):
+class ContactList(models.Model):
     topic = models.CharField(max_length=200)
     email = models.CharField(max_length=100)
     detail = models.TextField(null=True, blank=True)
@@ -29,5 +29,14 @@ class Profile(models.Model):
 
     def __str__ (self):
         return self.user.username
+    
+class Action(models.Model):
+    contactList = models.ForeignKey(ContactList, on_delete=models.CASCADE)
+    actionDetail = models.TextField()
+
+    def __str__(self):
+        return self.contactList.topic
+    
+
     
 

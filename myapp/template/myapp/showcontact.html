@@ -20,6 +20,11 @@
     {% for data in contact %}
     <tr>
       <th scope="row">{{ forloop.counter }}</th>
+      <td>
+        <a href="{% url 'action-page' data.id %}">
+          {{data.topic}}
+        </a>
+      </td>
       <td>{{ data.topic }}</td>
       <td>{{ data.email }}</td>
       <td>{{ data.detail }}</td>

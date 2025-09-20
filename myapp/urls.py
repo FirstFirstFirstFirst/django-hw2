@@ -4,7 +4,7 @@ from .views import aboutUs, contact, home, showContact
 from django.contrib.auth import views
 from django.shortcuts import render, redirect
 
-from myapp.views import userLogin, userRegist, userProfile, editProfile
+from myapp.views import userLogin, userRegist, userProfile, editProfile, actionPage
 
 urlpatterns = [
     path("", home, name="home-page"),
@@ -16,6 +16,7 @@ urlpatterns = [
     path('showcontact/', showContact, name="showcontact-page"),
     path('register/', userRegist, name="register-page"),
     path('profile', userProfile, name="profile-page"),
-    path('editprofile/', editProfile, name="editprofile-page")
+    path('editprofile/', editProfile, name="editprofile-page"),
+    path('action/<int:cid>', actionPage, name='action-page')
     
 ]

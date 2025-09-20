@@ -29,7 +29,7 @@ def contact(request):
             context["message"] = "Please, fill in all contact informations"
             return render(request, "myapp/contact.html", context)
 
-        newRecord = contactList()
+        newRecord = ContactList()
         newRecord.topic = topic
 
         newRecord.email = email
@@ -56,7 +56,7 @@ def userLogin(request):
     return render(request, "myapp/login.html", context)
 
 def showContact(request):
-    allcontact = contactList.objects.all()
+    allcontact = ContactList.objects.all()
 
     context = {'contact': allcontact}
     return render(request, 'myapp/showcontact.html', context)
@@ -128,3 +128,11 @@ def editProfile(request):
             context['message'] = "edit profile fail"
 
     return render(request, 'myapp/editprofile.html', context)
+
+
+def actionPage(request, cid):
+    
+    context = {}
+    contact = ContactList.objects.get(id=cid)
+    context['contact'] = contact
+    return render(request, 'myapp/action.html', context)
