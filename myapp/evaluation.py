@@ -36,30 +36,39 @@ def chat(messages, system=None, temperature=1.0, stop_sequences=[]):
     message = client.messages.create(**params)
     return message.content[0].text
 
-def generate_dataset():
-    """Generate evaluation dataset using Claude API"""
-    prompt = """
-Generate an evaluation dataset for a prompt evaluation. The dataset will be used to evaluate prompts
-that generate Python, JSON, or Regex for various programming tasks. Generate an array of JSON objects,
-each representing a task that requires Python, JSON, or a Regex to complete.
+def generate_dataset(user_prompt_text):
+    """Generate evaluation dataset aligned to the user prompt (keeps JSON fence hack)"""
+    prompt = f"""
+You are generating evaluation tasks that directly test the user's prompt intent.
 
-Example output:
-```json
+User prompt:
+\"\"\"{user_prompt_text}\"\"\"
+
+Goal:
+Return a JSON **array** of 3 task objects that are *variations or edge cases* of the user's prompt.
+Keep tasks tightly aligned to the user's intent (no unrelated domains).
+
+Each object MUST have:
+- "task": a concrete input or description tailored to the user's prompt
+- "format": "json"
+- "solution_criteria": concise, objective criteria for correctness
+
+Examples of variation types to include when relevant:
+- simple baseline case
+- tricky formats / punctuation / spacing
+- noise in text (extra words, symbols)
+- international formats / prefixes
+- multiple matches vs single match
+- empty / no-match case
+
+Output strictly as a JSON array with objects in this shape:
 [
-    {
-        "task": "Description of task",
-        "format": "json" or "python" or "regex",
-        "solution_criteria": "Key criteria for evaluating the solution"
-    },
-    ...additional
+  {{
+    "task": "Description of task",
+    "format": "json" 
+    "solution_criteria": "Key criteria for evaluating the solution"
+  }}
 ]
-```
-
-* Focus on tasks that can be solved by writing a single Python function, a single JSON object, or a regular expression.
-* Focus on tasks that do not require writing much code
-* Include a variety of domains: data processing, text manipulation, configuration, validation, etc.
-
-Please generate 3 objects.
 """
 
     messages = []
@@ -69,6 +78,7 @@ Please generate 3 objects.
     return json.loads(text)
 
 
+
 def run_prompt(test_case, user_prompt_text):
     """Run the user's prompt with a test case through Claude API"""
     prompt = f"""
@@ -76,7 +86,7 @@ def run_prompt(test_case, user_prompt_text):
 
 Task: {test_case["task"]}
 
-* Respond only with Python, JSON, or a plain Regex
+* Respond only with JSON
 * Do not add any comments or commentary or explanation
 """
 
@@ -95,31 +105,12 @@ def validate_json(text):
     except json.JSONDecodeError:
         return 0
 
-def validate_python(text):
-    """Validate Python syntax"""
-    try:
-        ast.parse(text.strip())
-        return 10
-    except SyntaxError:
-        return 0
-
-def validate_regex(text):
-    """Validate regex pattern"""
-    try:
-        re.compile(text.strip())
-        return 10
-    except re.error:
-        return 0
-
 def grade_syntax(response, test_case):
     """Grade the syntax validity of the response"""
     format_type = test_case["format"]
     if format_type == "json":
         return validate_json(response)
-    elif format_type == "python":
-        return validate_python(response)
-    else:
-        return validate_regex(response)
+    
 
 def grade_by_model(test_case, output):
     """Grade a test case + output using a model"""
@@ -205,7 +196,7 @@ def run_evaluation(prompt_text, description="", version="1.0"):
     )
 
     # Generate dataset of test cases
-    dataset = generate_dataset()
+    dataset = generate_dataset(prompt_text)
 
     results = []
     total_score = 0

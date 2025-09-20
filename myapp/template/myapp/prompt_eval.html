@@ -2,8 +2,12 @@
 
 {% block myheader %}
 <div class="pricing-header p-3 pb-md-4 mx-auto text-center">
-    <h1 class="display-4 fw-normal">Prompt Evaluation</h1>
-    <p class="fs-5 text-muted">Evaluate your prompts through automated testing and model-based grading</p>
+    <h1 class="display-4 fw-normal">Prompt Task Performance Evaluation</h1>
+    <p class="fs-5 text-muted">Test how reliably your prompt performs across tasks — not prompt writing quality</p>
+    <div class="alert alert-info mx-auto" style="max-width: 800px;">
+        <strong>What this system does:</strong> Measures how well your prompt works when applied to test cases.<br>
+        <strong>What it doesn't do:</strong> Judge whether your prompt text is "well-written" or clearly worded.
+    </div>
 </div>
 {% endblock myheader %}
 
@@ -26,9 +30,62 @@
                     <div class="mb-3">
                         <label for="prompt_text" class="form-label">Prompt Text</label>
                         <textarea class="form-control" name="prompt_text" id="prompt_text" rows="8"
-                                  placeholder="Enter your prompt here. For best results, design prompts that expect structured output (JSON, Python code, regex patterns, etc.)" required></textarea>
+                                  placeholder="Example: 'Extract all email addresses from the text and return them as a JSON array'" required></textarea>
                         <div class="form-text">
-                            <strong>Tip:</strong> Write prompts that expect structured outputs like JSON, Python code, or regex patterns for better evaluation results.
+                            <strong>Best for evaluation:</strong> Prompts that produce structured outputs (JSON, Python code, regex patterns) where correctness can be measured objectively.
+                        </div>
+                    </div>
+
+                    <!-- Example Prompts Section -->
+                    <div class="mb-3">
+                        <div class="card border-info">
+                            <div class="card-header">
+                                <button class="btn btn-link p-0 text-decoration-none" type="button" data-bs-toggle="collapse" data-bs-target="#examplePrompts">
+                                    💡 Example Prompts That Work Well
+                                </button>
+                            </div>
+                            <div class="collapse" id="examplePrompts">
+                                <div class="card-body small">
+                                    <div class="mb-3">
+                                        <strong>JSON Output:</strong><br>
+                                        <code>"Extract all phone numbers from the text and return them as a JSON array"</code>
+                                    </div>
+                                    <div class="mb-3">
+                                        <strong>Python Code:</strong><br>
+                                        <code>"Write a Python function that calculates the area of a circle given the radius"</code>
+                                    </div>
+                                    <div class="mb-0">
+                                        <strong>Regex Pattern:</strong><br>
+                                        <code>"Create a regex pattern that matches valid email addresses"</code>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Scoring Methodology Section -->
+                    <div class="mb-3">
+                        <div class="card border-secondary">
+                            <div class="card-header">
+                                <button class="btn btn-link p-0 text-decoration-none" type="button" data-bs-toggle="collapse" data-bs-target="#scoringInfo">
+                                    📊 How Scoring Works
+                                </button>
+                            </div>
+                            <div class="collapse" id="scoringInfo">
+                                <div class="card-body small">
+                                    <h6>Scoring Method:</h6>
+                                    <ul class="mb-2">
+                                        <li><strong>Syntax Check:</strong> Is the output valid JSON/Python/Regex?</li>
+                                        <li><strong>Task Accuracy:</strong> Does it correctly solve the test case?</li>
+                                    </ul>
+                                    <h6>Score Interpretation:</h6>
+                                    <ul class="mb-0">
+                                        <li><strong>8-10:</strong> Reliable - consistently generates correct results</li>
+                                        <li><strong>5-7:</strong> Inconsistent - works sometimes, fails other times</li>
+                                        <li><strong>1-4:</strong> Unreliable - often produces incorrect or invalid results</li>
+                                    </ul>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <button type="submit" class="btn btn-primary">Evaluate Prompt</button>
@@ -44,18 +101,34 @@
         {% if evaluation_result %}
         <div class="card">
             <div class="card-header bg-success text-white">
-                <h5 class="card-title mb-0">Evaluation Results</h5>
+                <h5 class="card-title mb-0">Task Performance Results</h5>
             </div>
             <div class="card-body">
                 <div class="row">
                     <div class="col-6">
-                        <h6>Average Score</h6>
+                        <h6>Task Performance Score</h6>
                         <h2 class="text-primary">{{ evaluation_result.average_score }}/10</h2>
+                        <small class="text-muted">
+                            {% if evaluation_result.average_score >= 8 %}
+                                🟢 Reliable performance
+                            {% elif evaluation_result.average_score >= 5 %}
+                                🟡 Inconsistent performance
+                            {% else %}
+                                🔴 Unreliable performance
+                            {% endif %}
+                        </small>
                     </div>
                     <div class="col-6">
-                        <h6>Test Cases</h6>
+                        <h6>Test Cases Evaluated</h6>
                         <h2 class="text-secondary">{{ evaluation_result.total_test_cases }}</h2>
+                        <small class="text-muted">Auto-generated test scenarios</small>
                     </div>
+                </div>
+
+                <div class="alert alert-light mt-3">
+                    <small>
+                        <strong>This score measures:</strong> How reliably your prompt produces correct, valid outputs across different tasks. Higher scores indicate better task performance consistency.
+                    </small>
                 </div>
 
                 <h6 class="mt-4">Test Case Results:</h6>
