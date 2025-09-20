@@ -2,90 +2,129 @@
 {% load static %}
 
 {% block content %}
-<div class="text-center mb-8">
+<div class="text-center mb-12">
   <h1 class="text-4xl font-bold text-earth-900 mb-2">Welcome to Prompt Evaluation Suite</h1>
   <p class="text-earth-700 text-lg">Test and improve your AI prompts with our comprehensive evaluation tools</p>
 </div>
 
-<center>
-  {% for row in allrow %}
- 
-  <div class="row row-cols-1 row-cols-md-3 mb-3 text-center">
-    {% for c in row %}
-    <div class="col">
-      <div class="card" style="width: 18rem;">
-        {% if c.picture %}
-        <img src="{{c.picture.url}}"
-             class="card-img-top" width="200" height="300">
-        {% endif %}
-        <div class="card-body">
-          <h5 class="card-title">{{ c.title }}</h5>
-          <p class="card-text">{{ c.price }} ฿</p>
-          <a href="#" class="btn btn-primary">more detail</a>
+<!-- Prompts Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+  {% for item in prompts_with_scores %}
+    <div class="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 p-6 border border-earth-200">
+      <!-- Header -->
+      <div class="flex justify-between items-start mb-4">
+        <h3 class="text-lg font-semibold text-earth-900 truncate">
+          {{ item.prompt.description|default:"Untitled Prompt" }}
+        </h3>
+        <span class="bg-earth-100 text-earth-700 px-2 py-1 rounded-full text-xs font-medium">
+          v{{ item.prompt.version }}
+        </span>
+      </div>
+
+      <!-- Prompt Preview -->
+      <div class="mb-4">
+        <p class="text-earth-600 text-sm line-clamp-3 bg-earth-50 p-3 rounded-md">
+          {{ item.prompt.text|truncatewords:20 }}
+        </p>
+      </div>
+
+      <!-- Stats -->
+      <div class="flex items-center justify-between mb-4">
+        <div class="flex items-center space-x-4">
+          <div class="text-center">
+            <div class="text-sm font-medium text-earth-900">{{ item.test_cases_count }}</div>
+            <div class="text-xs text-earth-600">Test Cases</div>
+          </div>
+          {% if item.avg_score %}
+            <div class="text-center">
+              <div class="text-sm font-medium text-earth-900">{{ item.avg_score }}/10</div>
+              <div class="text-xs text-earth-600">Avg Score</div>
+            </div>
+          {% endif %}
         </div>
+
+        <!-- Score Badge -->
+        {% if item.avg_score %}
+          {% if item.avg_score >= 8 %}
+            <span class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-medium">Excellent</span>
+          {% elif item.avg_score >= 6 %}
+            <span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-xs font-medium">Good</span>
+          {% else %}
+            <span class="bg-red-100 text-red-800 px-2 py-1 rounded-full text-xs font-medium">Needs Work</span>
+          {% endif %}
+        {% else %}
+          <span class="bg-gray-100 text-gray-600 px-2 py-1 rounded-full text-xs font-medium">Not Evaluated</span>
+        {% endif %}
+      </div>
+
+      <!-- Footer -->
+      <div class="flex items-center justify-between">
+        <div class="text-xs text-earth-500">
+          Created {{ item.prompt.created_at|date:"M j, Y" }}
+        </div>
+        <a href="{% url 'prompt-eval-page' %}?prompt_id={{ item.prompt.id }}"
+           class="bg-terracotta-600 hover:bg-terracotta-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors">
+          View Details
+        </a>
       </div>
     </div>
-    {% endfor %}
-  </div>
-  {% endfor %}
-</center>
-<center>
-  <hr>
-  <ul class="pagination">
-
-    {# Case 1: has previous + has next != True #}
-    {% if allproduct.has_previous and allproduct.has_next != True %}
-      <li class="page-item">
-        <a class="page-link" href="?page={{ allproduct.previous_page_number }}"> < </a>
-      </li>
-      <li class="page-item">
-        <a class="page-link" href="?page={{ allproduct.number|add:-1 }}">{{ allproduct.number|add:-1 }}</a>
-      </li>
-      <li class="page-item active">
-        <a class="page-link" href="?page={{ allproduct.number }}">{{ allproduct.number }}</a>
-      </li>
-    {% endif %}
-
-    {# Case 2: has previous + has next #}
-    {% if allproduct.has_previous and allproduct.has_next %}
-      <li class="page-item">
-        <a class="page-link" href="?page={{ allproduct.previous_page_number }}"> < </a>
-      </li>
-      <li class="page-item">
-        <a class="page-link" href="?page={{ allproduct.number|add:-1 }}">{{ allproduct.number|add:-1 }}</a>
-      </li>
-      <li class="page-item active">
-        <a class="page-link" href="?page={{ allproduct.number }}">{{ allproduct.number }}</a>
-      </li>
-      <li class="page-item">
-        <a class="page-link" href="?page={{ allproduct.number|add:1 }}">{{ allproduct.number|add:1 }}</a>
-      </li>
-      <li class="page-item">
-        <a class="page-link" href="?page={{ allproduct.next_page_number }}"> > </a>
-      </li>
-    {% endif %}
-
-    {# Case 3: has next + has previous != True #}
-    {% if allproduct.has_next and allproduct.has_previous != True %}
-      <li class="page-item active">
-        <a class="page-link" href="?page={{ allproduct.number }}">{{ allproduct.number }}</a>
-      </li>
-      <li class="page-item">
-        <a class="page-link" href="?page={{ allproduct.number|add:1 }}">{{ allproduct.number|add:1 }}</a>
-      </li>
-      {% if allproduct.num_pages >= 2 %}
-        <li class="page-item">
-          <a class="page-link" href="?page={{ allproduct.number|add:2 }}">{{ allproduct.number|add:2 }}</a>
-        </li>
+  {% empty %}
+    <div class="col-span-full text-center py-12">
+      <div class="text-earth-500 mb-4">
+        <svg class="mx-auto h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+        </svg>
+      </div>
+      <h3 class="text-lg font-medium text-earth-900 mb-2">No prompts found</h3>
+      <p class="text-earth-600 mb-4">Get started by creating your first prompt evaluation.</p>
+      {% if user.profile.usertype == "admin" %}
+        <a href="{% url 'addprompt-page' %}"
+           class="bg-terracotta-600 hover:bg-terracotta-700 text-white px-6 py-2 rounded-md font-medium transition-colors">
+          Add First Prompt
+        </a>
       {% endif %}
-      <li class="page-item">
-        <a class="page-link" href="?page={{ allproduct.next_page_number }}"> > </a>
-      </li>
+    </div>
+  {% endfor %}
+</div>
+
+<!-- Pagination -->
+{% if allprompts.has_other_pages %}
+  <div class="flex items-center justify-center space-x-1 mb-8">
+    {% if allprompts.has_previous %}
+      <a href="?page={{ allprompts.previous_page_number }}"
+         class="px-3 py-2 text-earth-700 hover:text-terracotta-600 hover:bg-terracotta-50 rounded-md transition-colors">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+        </svg>
+      </a>
     {% endif %}
 
-  </ul>
-  <p>page {{ allproduct.number }} from {{ allproduct.paginator.num_pages }}</p>
-</center>
+    {% for page_num in allprompts.paginator.page_range %}
+      {% if page_num == allprompts.number %}
+        <span class="px-3 py-2 bg-terracotta-600 text-white rounded-md font-medium">{{ page_num }}</span>
+      {% elif page_num >= allprompts.number|add:-2 and page_num <= allprompts.number|add:2 %}
+        <a href="?page={{ page_num }}"
+           class="px-3 py-2 text-earth-700 hover:text-terracotta-600 hover:bg-terracotta-50 rounded-md transition-colors">
+          {{ page_num }}
+        </a>
+      {% endif %}
+    {% endfor %}
+
+    {% if allprompts.has_next %}
+      <a href="?page={{ allprompts.next_page_number }}"
+         class="px-3 py-2 text-earth-700 hover:text-terracotta-600 hover:bg-terracotta-50 rounded-md transition-colors">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+        </svg>
+      </a>
+    {% endif %}
+  </div>
+
+  <div class="text-center text-earth-600 text-sm">
+    Page {{ allprompts.number }} of {{ allprompts.paginator.num_pages }}
+    ({{ allprompts.paginator.count }} total prompts)
+  </div>
+{% endif %}
 {% endblock content %}
 
 

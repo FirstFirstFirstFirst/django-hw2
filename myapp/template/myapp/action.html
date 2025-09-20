@@ -1,31 +1,53 @@
 {% extends 'myapp/base.html' %}
 
 {% block myheader %}
-<h1> Action detail </h1>
+<div class="text-center mb-6">
+  <h1 class="text-3xl font-bold text-earth-900">Action Detail</h1>
+</div>
 {% endblock myheader %}
 
 {% block content %}
+<div class="max-w-3xl mx-auto bg-white rounded-xl shadow-md border border-earth-200 p-6">
+  
+  <!-- Contact Info -->
+  <div class="mb-6">
+    <h3 class="text-xl font-semibold text-earth-800 mb-2">Topic: {{ contact.topic }}</h3>
+    <p class="text-earth-700 mb-1"><span class="font-medium">Email:</span> {{ contact.email }}</p>
+    <p class="text-earth-700"><span class="font-medium">Detail:</span> {{ contact.detail }}</p>
+  </div>
 
-    <div class="container">
-        <h3>Topic:{{contact.topic}}</h3><br>
-        <p>
-            Email:{{contact.email}}<br>
-            Detail:{{contact.detail}}<br>
-            <hr>
-        </p>
+  <hr class="my-6">
+
+  <!-- Action Form -->
+  <form method="POST" class="space-y-4">
+    {% csrf_token %}
+    <div>
+      <label for="actiondetail" class="block text-sm font-medium text-earth-700 mb-2">Action Detail</label>
+      <textarea 
+        id="actiondetail" 
+        name="actiondetail" 
+        rows="5"
+        class="w-full rounded-lg border border-earth-300 focus:ring-2 focus:ring-earth-400 focus:outline-none p-3"
+      >{{ action.actionDetail }}</textarea>
     </div>
-    <form method="POST">
-        {% csrf_token %}
-        <div class="form-group">
-            <label for="actiondetail">Action Detail:</label>
-            <textarea class="form-control" rows="5" id="actiondetail" name="actiondetail">
-            {{action.actionDetail}}
-            </textarea>
-        </div>
 
-        <button type="submit" class="btn btn-primary" name="save">Save</button>
-        <button type="submit" class="btn btn-danger" name="delete">Delete</button>
-        <button type="submit" class="btn btn-success" name="complete">Complete</button>
-    </form>
+    <!-- Buttons -->
+    <div class="flex space-x-3 pt-2">
+        <button type="submit" name="save" 
+            class="px-5 py-2 rounded-lg bg-sage-500 text-white shadow-soft">
+            Save
+        </button>
+        <button type="submit" name="delete" 
+            class="px-5 py-2 rounded-lg bg-terracotta-500 text-white shadow-soft">
+            Delete
+        </button>
+        <button type="submit" name="complete" 
+            class="px-5 py-2 rounded-lg bg-earth-500 text-white shadow-soft">
+            Complete
+        </button>
+    </div>
 
+
+  </form>
+</div>
 {% endblock content %}

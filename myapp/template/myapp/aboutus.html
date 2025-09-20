@@ -1,14 +1,112 @@
 {% extends 'myapp/base.html' %}
-{% load static %}
 
 {% block myheader %}
+<div class="text-center mb-8">
+  <h1 class="text-4xl font-bold text-earth-900 mb-2">About Prompt Evaluation Suite</h1>
+  <p class="text-earth-700 text-lg">Empowering AI development through comprehensive prompt testing</p>
+</div>
 {% endblock myheader %}
 
 {% block content %}
-<script src="{% static 'js/myJS.js' %}"></script>
-<script>
-  myJS();
-</script>
-<h1>About us</h1>
-<h2>This is the about us webpage</h2>
+<div class="max-w-4xl mx-auto space-y-12 ">
+  <!-- Mission Section -->
+  <div class="bg-white rounded-lg shadow-md p-8 border border-earth-200 mb-8">
+    <h2 class="text-2xl font-bold text-earth-900 mb-4">Our Mission</h2>
+    <p class="text-earth-700 text-lg leading-relaxed">
+      Prompt Evaluation Suite is designed to help developers, researchers, and AI enthusiasts create, test, and refine AI prompts with confidence. Our platform provides comprehensive evaluation tools to ensure your prompts perform consistently and effectively across different scenarios.
+    </p>
+  </div>
+
+  <!-- Features Section -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+    <div class="bg-white rounded-lg shadow-md p-6 border border-earth-200">
+      <div class="flex items-center mb-4">
+        <div class="bg-terracotta-100 p-2 rounded-lg mr-3">
+          <svg class="w-6 h-6 text-terracotta-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+        </div>
+        <h3 class="text-lg font-semibold text-earth-900">Automated Testing</h3>
+      </div>
+      <p class="text-earth-600">Run comprehensive tests on your prompts with multiple test cases and receive detailed scoring and feedback.</p>
+    </div>
+
+    <div class="bg-white rounded-lg shadow-md p-6 border border-earth-200">
+      <div class="flex items-center mb-4">
+        <div class="bg-terracotta-100 p-2 rounded-lg mr-3">
+          <svg class="w-6 h-6 text-terracotta-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+          </svg>
+        </div>
+        <h3 class="text-lg font-semibold text-earth-900">Performance Analytics</h3>
+      </div>
+      <p class="text-earth-600">Track prompt performance over time with detailed analytics and version comparison tools.</p>
+    </div>
+
+    <div class="bg-white rounded-lg shadow-md p-6 border border-earth-200">
+      <div class="flex items-center mb-4">
+        <div class="bg-terracotta-100 p-2 rounded-lg mr-3">
+          <svg class="w-6 h-6 text-terracotta-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+          </svg>
+        </div>
+        <h3 class="text-lg font-semibold text-earth-900">Prompt Library</h3>
+      </div>
+      <p class="text-earth-600">Build and maintain a comprehensive library of tested prompts with version control and collaboration features.</p>
+    </div>
+
+    <div class="bg-white rounded-lg shadow-md p-6 border border-earth-200">
+      <div class="flex items-center mb-4">
+        <div class="bg-terracotta-100 p-2 rounded-lg mr-3">
+          <svg class="w-6 h-6 text-terracotta-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+          </svg>
+        </div>
+        <h3 class="text-lg font-semibold text-earth-900">Claude Integration</h3>
+      </div>
+      <p class="text-earth-600">Seamlessly integrated with Claude API for real-time prompt evaluation and testing.</p>
+    </div>
+  </div>
+
+  <!-- Technology Section -->
+  <div class="bg-earth-50 rounded-lg p-8 border border-earth-200 mt-8 mb-8">
+    <h2 class="text-2xl font-bold text-earth-900 mb-6 text-center">Built for Developers</h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+      <div>
+        <div class="bg-white rounded-lg p-4 shadow-sm">
+          <h4 class="font-semibold text-earth-900 mb-2">Django Framework</h4>
+          <p class="text-sm text-earth-600">Robust backend built with Django for reliable performance and scalability.</p>
+        </div>
+      </div>
+      <div>
+        <div class="bg-white rounded-lg p-4 shadow-sm">
+          <h4 class="font-semibold text-earth-900 mb-2">Claude API</h4>
+          <p class="text-sm text-earth-600">Powered by Anthropic's Claude API for accurate prompt evaluation and scoring.</p>
+        </div>
+      </div>
+      <div>
+        <div class="bg-white rounded-lg p-4 shadow-sm">
+          <h4 class="font-semibold text-earth-900 mb-2">Modern UI</h4>
+          <p class="text-sm text-earth-600">Clean, responsive interface designed for efficient prompt management and testing.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contact CTA -->
+  <div class="text-center bg-terracotta-50 rounded-lg p-8 border border-terracotta-200">
+    <h2 class="text-2xl font-bold text-earth-900 mb-4">Get Started Today</h2>
+    <p class="text-earth-700 mb-6">Ready to improve your AI prompts? Join our community and start evaluating your prompts with confidence.</p>
+    <div class="flex gap-4 w-full items-center justify-center">
+      <a href="{% url 'prompt-eval-page' %}"
+         class="bg-terracotta-600 hover:bg-terracotta-700 text-white px-6 py-3 rounded-lg font-medium transition-colors shadow-sm">
+        Try Prompt Evaluation
+      </a>
+      <a href="{% url 'contact-page' %}"
+         class="bg-white hover:bg-earth-50 text-earth-900 px-6 py-3 rounded-lg font-medium border border-earth-300 transition-colors">
+        Contact Us
+      </a>
+    </div>
+  </div>
+</div>
 {% endblock content %}

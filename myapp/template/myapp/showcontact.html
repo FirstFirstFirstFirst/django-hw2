@@ -1,40 +1,80 @@
 {% extends 'myapp/base.html' %}
-{% load static %}
 
 {% block myheader %}
-<center> All Contacts </center>
+<div class="text-center mb-10">
+  <h1 class="text-4xl font-bold text-earth-900 mb-3">Contact Submissions</h1>
+  <p class="text-earth-700 text-lg">Manage user feedback and inquiries</p>
+</div>
 {% endblock myheader %}
 
 {% block content %}
-<table class="table table-success table-striped">
-  <thead>
-    <tr>
-      <th scope="col">#</th>
-      <th scope="col">Topic</th>
-      <th scope="col">Email</th>
-      <th scope="col">Detail</th>
-      <th scope="col">Complete</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for data in contact %}
-    <tr>
-      <th scope="row">{{ forloop.counter }}</th>
-      <td>
-        <a href="{% url 'action-page' data.id %}">
-          {{data.topic}}
-        </a>
-      </td>
-      <td>{{ data.topic }}</td>
-      <td>{{ data.email }}</td>
-      <td>{{ data.detail }}</td>
-      {% if data.complete == True %}
-        <td>Yes</td>
-      {% else %}
-        <td>No</td>
-      {% endif %}
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
+<!-- page container: center + horizontal padding -->
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+  <!-- card -->
+  <div class="bg-white rounded-xl shadow-lg border border-earth-200 p-6 w-full">
+    {% if contact %}
+      <!-- table wrapper (no negative margins) -->
+      <div class="overflow-x-auto">
+        <!-- table: full width and fixed layout so column widths behave predictably -->
+        <table class="min-w-full w-full table-fixed divide-y divide-earth-200 text-sm">
+          <thead class="bg-earth-50">
+            <tr>
+              <th class="px-4 py-3 text-left font-medium text-earth-600 uppercase tracking-wider w-[6%]">#</th>
+              <th class="px-4 py-3 text-left font-medium text-earth-600 uppercase tracking-wider w-[18%]">Topic</th>
+              <th class="px-4 py-3 text-left font-medium text-earth-600 uppercase tracking-wider w-[22%]">Email</th>
+              <th class="px-4 py-3 text-left font-medium text-earth-600 uppercase tracking-wider w-[40%]">Detail</th>
+              <th class="px-4 py-3 text-left font-medium text-earth-600 uppercase tracking-wider w-[14%]">Status</th>
+            </tr>
+          </thead>
+
+          <tbody class="bg-white divide-y divide-earth-200">
+            {% for data in contact %}
+            <tr class="hover:bg-earth-50 transition">
+              <td class="px-4 py-4 font-medium text-earth-900 text-sm">{{ forloop.counter }}</td>
+
+              <td class="px-4 py-4 text-sm">
+                <a href="{% url 'action-page' data.id %}" 
+                   class="text-terracotta-600 hover:text-terracotta-900 font-semibold transition-colors">
+                  {{ data.topic }}
+                </a>
+              </td>
+
+              <td class="px-4 py-4 text-sm text-earth-900 break-words">
+                {{ data.email }}
+              </td>
+
+              <!-- detail: truncate with overflow-hidden so it doesn't force column wider than table-fixed rules -->
+              <td class="px-4 py-4 text-sm">
+                <div class="max-w-full overflow-hidden truncate" title="{{ data.detail }}">{{ data.detail }}</div>
+              </td>
+
+              <td class="px-4 py-4 text-sm">
+                {% if data.complete %}
+                  <span class="inline-flex px-3 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-700">Completed</span>
+                {% else %}
+                  <span class="inline-flex px-3 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-700">Pending</span>
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <!-- empty state -->
+      <div class="text-center py-16">
+        <div class="text-earth-500 mb-4">
+          <svg class="mx-auto h-14 w-14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                  d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2M4 13h2" />
+          </svg>
+        </div>
+        <h3 class="text-xl font-semibold text-earth-900 mb-2">No contact submissions</h3>
+        <p class="text-earth-600">When users submit feedback or inquiries, they will appear here.</p>
+      </div>
+    {% endif %}
+  </div>
+
+</div>
 {% endblock content %}

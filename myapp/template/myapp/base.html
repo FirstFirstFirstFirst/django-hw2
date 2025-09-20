@@ -59,9 +59,9 @@
                  class="text-earth-700 hover:text-terracotta-600 font-medium transition-colors">
                 Show Contact
               </a>
-              <a href="{% url 'addproduct-page' %}"
+              <a href="{% url 'addprompt-page' %}"
                  class="text-earth-700 hover:text-terracotta-600 font-medium transition-colors">
-                Add Product
+                Add Prompt
               </a>
             {% endif %}
 
@@ -103,33 +103,26 @@
               />
               <span class="font-semibold text-earth-800">Prompt Suite</span>
             </div>
-            <p class="text-sm text-earth-600">&copy; 2024 Prompt Evaluation Suite. All rights reserved.</p>
+            <p class="text-sm text-earth-600">&copy; 2025 Prompt Evaluation Suite. All rights reserved.</p>
           </div>
           <div>
             <h5 class="font-semibold text-terracotta-600 mb-4">Features</h5>
             <ul class="space-y-2 text-sm">
-              <li><a href="{% url 'prompt-eval-page' %}" class="text-earth-600 hover:text-terracotta-600 transition-colors">Prompt Testing</a></li>
-              <li><a href="#" class="text-earth-600 hover:text-terracotta-600 transition-colors">Performance Analytics</a></li>
-              <li><a href="#" class="text-earth-600 hover:text-terracotta-600 transition-colors">Test Case Generation</a></li>
-              <li><a href="#" class="text-earth-600 hover:text-terracotta-600 transition-colors">Score Tracking</a></li>
+              <li><a href="{% url 'prompt-eval-page' %}" class="text-earth-600 hover:text-terracotta-600 transition-colors">Prompt Evaluation</a></li>
+              <li><a href="{% url 'home-page' %}" class="text-earth-600 hover:text-terracotta-600 transition-colors">Prompt Library</a></li>
+              {% if user.profile.usertype == "admin" %}
+                <li><a href="{% url 'addprompt-page' %}" class="text-earth-600 hover:text-terracotta-600 transition-colors">Add Prompts</a></li>
+              {% endif %}
+              <li><a href="{% url 'contact-page' %}" class="text-earth-600 hover:text-terracotta-600 transition-colors">Feedback</a></li>
             </ul>
           </div>
-          <div>
-            <h5 class="font-semibold text-terracotta-600 mb-4">Resources</h5>
-            <ul class="space-y-2 text-sm">
-              <li><a href="#" class="text-earth-600 hover:text-terracotta-600 transition-colors">Documentation</a></li>
-              <li><a href="#" class="text-earth-600 hover:text-terracotta-600 transition-colors">API Reference</a></li>
-              <li><a href="#" class="text-earth-600 hover:text-terracotta-600 transition-colors">Best Practices</a></li>
-              <li><a href="#" class="text-earth-600 hover:text-terracotta-600 transition-colors">Tutorials</a></li>
-            </ul>
-          </div>
+          
           <div>
             <h5 class="font-semibold text-terracotta-600 mb-4">Support</h5>
             <ul class="space-y-2 text-sm">
               <li><a href="{% url 'about-page' %}" class="text-earth-600 hover:text-terracotta-600 transition-colors">About Us</a></li>
               <li><a href="{% url 'contact-page' %}" class="text-earth-600 hover:text-terracotta-600 transition-colors">Contact</a></li>
-              <li><a href="#" class="text-earth-600 hover:text-terracotta-600 transition-colors">Help Center</a></li>
-              <li><a href="#" class="text-earth-600 hover:text-terracotta-600 transition-colors">Community</a></li>
+              
             </ul>
           </div>
         </div>

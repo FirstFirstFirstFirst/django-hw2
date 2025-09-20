@@ -3,7 +3,7 @@ from django.urls import path
 
 from myapp.views import (
     actionPage,
-    addProduct,
+    addPrompt,
     editProfile,
     prompt_api,
     prompt_eval,
@@ -25,7 +25,7 @@ urlpatterns = [
     path("profile", userProfile, name="profile-page"),
     path("editprofile/", editProfile, name="editprofile-page"),
     path("action/<int:cid>", actionPage, name="action-page"),
-    path("addproduct/", addProduct, name="addproduct-page"),
+    path("addprompt/", addPrompt, name="addprompt-page"),
     path("prompt-eval/", prompt_eval, name="prompt-eval-page"),
     path("prompt-eval/api/prompts/", prompt_api, name="prompt-api"),
     path(

@@ -1,27 +1,89 @@
 {% extends "myapp/base.html" %}
 
 {% block myheader %}
-<h1> Contact US </h1>
+<div class="text-center mb-8">
+  <h1 class="text-3xl font-bold text-earth-900 mb-2">Welcome Back</h1>
+  <p class="text-earth-700">Sign in to your Prompt Evaluation Suite account</p>
+</div>
 {% endblock myheader %}
 
 {% block content %}
-
+<div class="max-w-md mx-auto">
   {% if message %}
-        <h3>{{ message }}</h3>
-    {% else %}
-        <form method="POST" action="">
-            {% csrf_token %} <!-- Cross-site request forgery -->
-            <div class="form-group">
-                <label for="username">User:</label>
-                <input type="text" class="form-control" id="username" name="username">
-            </div>
-            <div class="form-group">
-                <label for="password">Pass:</label>
-                <input type="password" class="form-control" id="password" name="password">
-            </div>
-            <button type="submit" class="btn btn-primary">Log in</button>
-        </form>
-        <p><a href="{% url 'register-page' %}">Create New Account</a></p>
-    {% endif %}
+    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
+      <p class="font-medium">{{ message }}</p>
+    </div>
+  {% endif %}
 
+  <div class="bg-white rounded-lg shadow-md p-8 border border-earth-200">
+    <form method="POST" action="" class="space-y-6">
+      {% csrf_token %}
+
+      <div>
+        <label for="username" class="block text-sm font-medium text-earth-900 mb-2">
+          Username
+        </label>
+        <input
+          type="text"
+          id="username"
+          name="username"
+          required
+          class="w-full px-3 py-2 border border-earth-300 rounded-md focus:outline-none focus:ring-2 focus:ring-terracotta-500 focus:border-transparent"
+          placeholder="Enter your username"
+        >
+      </div>
+
+      <div>
+        <label for="password" class="block text-sm font-medium text-earth-900 mb-2">
+          Password
+        </label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          required
+          class="w-full px-3 py-2 border border-earth-300 rounded-md focus:outline-none focus:ring-2 focus:ring-terracotta-500 focus:border-transparent"
+          placeholder="Enter your password"
+        >
+      </div>
+
+      <button
+        type="submit"
+        class="w-full bg-terracotta-600 hover:bg-terracotta-700 text-white py-2 px-4 rounded-md font-medium transition-colors shadow-sm">
+        Sign In
+      </button>
+    </form>
+
+    <div class="mt-6 text-center">
+      <p class="text-sm text-earth-600">
+        Don't have an account?
+        <a href="{% url 'register-page' %}"
+           class="text-terracotta-600 hover:text-terracotta-700 font-medium transition-colors">
+          Create New Account
+        </a>
+      </p>
+    </div>
+  </div>
+
+  <!-- Help Section -->
+  <div class="mt-8 bg-earth-50 rounded-lg p-6 border border-earth-200">
+    <h3 class="text-lg font-medium text-earth-900 mb-3">Need Help?</h3>
+    <ul class="space-y-2 text-sm text-earth-700">
+      <li class="flex items-start">
+        <span class="text-terracotta-600 mr-2">•</span>
+        Contact an administrator if you've forgotten your credentials
+      </li>
+      <li class="flex items-start">
+        <span class="text-terracotta-600 mr-2">•</span>
+        New users can register to start evaluating prompts
+      </li>
+      <li class="flex items-start">
+        <span class="text-terracotta-600 mr-2">•</span>
+        <a href="{% url 'contact-page' %}" class="text-terracotta-600 hover:text-terracotta-700 transition-colors">
+          Contact support
+        </a> for additional assistance
+      </li>
+    </ul>
+  </div>
+</div>
 {% endblock content %}

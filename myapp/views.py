@@ -13,26 +13,28 @@ from .models import *
 
 
 def home(request):
-    allproduct = Product.objects.all()
-    product_per_page = 3
-    paginator = Paginator(allproduct, product_per_page)
+    allprompts = Prompt.objects.all()
+    prompts_per_page = 6
+    paginator = Paginator(allprompts, prompts_per_page)
     page = request.GET.get("page")
-    allproduct = paginator.get_page(page)
+    allprompts = paginator.get_page(page)
 
-    context = {"allproduct": allproduct}
-    # 1 row 3 cols
-    allrow = []
-    row = []
-    for i, p in enumerate(allproduct):
-        if i % 3 == 0:
-            if i != 0:
-                allrow.append(row)
-                row = []
-            row.append(p)
-        else:
-            row.append(p)
-    allrow.append(row)
-    context["allrow"] = allrow
+    # Calculate average scores for each prompt
+    prompts_with_scores = []
+    for prompt in allprompts:
+        results = Result.objects.filter(prompt=prompt)
+        avg_score = sum(r.score for r in results if r.score) / len(results) if results else None
+        test_cases_count = TestCase.objects.filter(prompt=prompt).count()
+        prompts_with_scores.append({
+            'prompt': prompt,
+            'avg_score': round(avg_score, 1) if avg_score else None,
+            'test_cases_count': test_cases_count
+        })
+
+    context = {
+        "allprompts": allprompts,
+        "prompts_with_scores": prompts_with_scores
+    }
 
     return render(request, "myapp/home.html", context)
 
@@ -204,53 +206,26 @@ def actionPage(request, cid):
     return render(request, "myapp/action.html", context)
 
 
-def addProduct(request):
+def addPrompt(request):
+    context = {}
     if request.method == "POST":
         data = request.POST.copy()
-        title = data.get("title")
+        text = data.get("text")
         description = data.get("description")
-        price = data.get("price")
-        quantity = data.get("quantity")
-        instock = data.get("instock")
+        version = data.get("version", "1.0")
 
-        new = Product()
-        new.title = title
-        new.description = description
-        new.price = price
-        new.quantity = quantity
-
-        if instock == "instock":
-            new.instock = True
+        if text and description:
+            new_prompt = Prompt()
+            new_prompt.text = text
+            new_prompt.description = description
+            new_prompt.version = version
+            new_prompt.save()
+            context["message"] = "Prompt added successfully!"
+            return redirect("home-page")
         else:
-            new.instock = False
+            context["error"] = "Please fill in all required fields"
 
-        if "picture" in request.FILES:
-            file_image = request.FILES["picture"]
-            file_image_name = file_image.name.replace(
-                " ", "_"
-            )  # delete space in file name
-            # File system: from django.core.files.storage import FileSystemStorage
-            fs = FileSystemStorage(location="media/product")
-            filename = fs.save(file_image_name, file_image)
-            upload_file_url = fs.url(filename)
-            print("Picture url:", upload_file_url)
-            new.picture = "product" + upload_file_url[6:]
-
-        if "specfile" in request.FILES:
-            file_specfile = request.FILES["specfile"]
-            file_specfile_name = file_specfile.name.replace(
-                " ", "_"
-            )  # delete space in file name
-            # FileSystemStorage: from django.core.files.storage import FileSystemStorage
-            fs = FileSystemStorage(location="media/specfile")
-            filename = fs.save(file_specfile_name, file_specfile)
-            upload_file_url = fs.url(filename)
-            print("Specfile url:", upload_file_url)
-            new.specfile = "specfile" + upload_file_url[6:]
-
-        new.save()
-
-    return render(request, "myapp/addproduct.html")
+    return render(request, "myapp/addprompt.html", context)
 
 
 def handler404(request, exception):

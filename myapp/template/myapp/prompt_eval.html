@@ -3,20 +3,7 @@
 {% block myheader %}
 <div class="bg-gradient-to-br from-sage-50 to-sage-100 rounded-xl3 p-8 text-center mb-8">
     <h1 class="text-4xl font-bold text-earth-900 mb-4">Prompt Task Performance Evaluation</h1>
-    <p class="text-lg text-earth-700 mb-6 max-w-2xl mx-auto">Test how reliably your prompt performs across tasks — not prompt writing quality</p>
-    <div class="alert alert-info max-w-3xl mx-auto">
-        <div class="flex items-start space-x-3">
-            <div class="flex-shrink-0">
-                <svg class="w-5 h-5 text-blue-600 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
-                </svg>
-            </div>
-            <div class="text-left">
-                <p><strong>What this system does:</strong> Measures how well your prompt works when applied to test cases.</p>
-                <p class="mt-2"><strong>What it doesn't do:</strong> Judge whether your prompt text is "well-written" or clearly worded.</p>
-            </div>
-        </div>
-    </div>
+    <p class="text-lg text-earth-700 mb-6 max-w-2xl mx-auto">Test how reliably your prompt performs across tasks</p>
 </div>
 {% endblock myheader %}
 
@@ -37,76 +24,14 @@
                             <input type="text" class="form-input" name="description" id="description"
                                    placeholder="Brief description of your prompt">
                         </div>
-                        <div>
+                        <div class="w-full">
                             <label for="prompt_text" class="form-label">Prompt Text</label>
-                            <textarea class="form-textarea" name="prompt_text" id="prompt_text" rows="8"
+                            <textarea class="form-textarea w-full" name="prompt_text" id="prompt_text" rows="8"
                                       placeholder="Example: 'Extract all email addresses from the text and return them as a JSON array'" required></textarea>
-                            <p class="text-sm text-earth-600 mt-2">
-                                <strong>Best for evaluation:</strong> Prompts that produce structured outputs (JSON, Python code, regex patterns) where correctness can be measured objectively.
-                            </p>
+                            
                         </div>
                     </div>
 
-                    <!-- Example Prompts Section -->
-                    <div x-data="{ open: false }" class="">
-                        <div class="border border-blue-200 rounded-lg">
-                            <button @click="open = !open" class="w-full flex items-center justify-between p-4 text-left bg-blue-50 hover:bg-blue-100 transition-colors rounded-t-lg" type="button">
-                                <span class="flex items-center space-x-2 text-blue-800 font-medium">
-                                    <span>💡</span>
-                                    <span>Example Prompts That Work Well</span>
-                                </span>
-                                <svg class="w-5 h-5 text-blue-600 transition-transform" :class="open ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                                </svg>
-                            </button>
-                            <div x-show="open" x-transition class="p-4 space-y-4 text-sm">
-                                <div>
-                                    <strong class="text-earth-900">JSON Output:</strong><br>
-                                    <code class="block mt-1 p-2 bg-sage-50 rounded text-earth-800">"Extract all phone numbers from the text and return them as a JSON array"</code>
-                                </div>
-                                <div>
-                                    <strong class="text-earth-900">Python Code:</strong><br>
-                                    <code class="block mt-1 p-2 bg-sage-50 rounded text-earth-800">"Write a Python function that calculates the area of a circle given the radius"</code>
-                                </div>
-                                <div>
-                                    <strong class="text-earth-900">Regex Pattern:</strong><br>
-                                    <code class="block mt-1 p-2 bg-sage-50 rounded text-earth-800">"Create a regex pattern that matches valid email addresses"</code>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Scoring Methodology Section -->
-                    <div x-data="{ open: false }" class="">
-                        <div class="border border-earth-300 rounded-lg">
-                            <button @click="open = !open" class="w-full flex items-center justify-between p-4 text-left bg-earth-50 hover:bg-earth-100 transition-colors rounded-t-lg" type="button">
-                                <span class="flex items-center space-x-2 text-earth-800 font-medium">
-                                    <span>📊</span>
-                                    <span>How Scoring Works</span>
-                                </span>
-                                <svg class="w-5 h-5 text-earth-600 transition-transform" :class="open ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                                </svg>
-                            </button>
-                            <div x-show="open" x-transition class="p-4 space-y-4 text-sm">
-                                <div>
-                                    <h6 class="font-semibold text-earth-900 mb-2">Scoring Method:</h6>
-                                    <ul class="space-y-1 text-earth-700 list-disc list-inside">
-                                        <li><strong>Syntax Check:</strong> Is the output valid JSON/Python/Regex?</li>
-                                        <li><strong>Task Accuracy:</strong> Does it correctly solve the test case?</li>
-                                    </ul>
-                                </div>
-                                <div>
-                                    <h6 class="font-semibold text-earth-900 mb-2">Score Interpretation:</h6>
-                                    <ul class="space-y-1 text-earth-700 list-disc list-inside">
-                                        <li><strong>8-10:</strong> Reliable - consistently generates correct results</li>
-                                        <li><strong>5-7:</strong> Inconsistent - works sometimes, fails other times</li>
-                                        <li><strong>1-4:</strong> Unreliable - often produces incorrect or invalid results</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                     <button type="submit" class="btn btn-primary btn-lg w-full">Evaluate Prompt</button>
                 </form>
 
@@ -193,7 +118,7 @@
     </div>
 
     <!-- Right Column: Prompt History -->
-    <div class="space-y-6">
+    <div class="space-y-4">
         <div class="card">
             <div class="card-header flex justify-between items-center">
                 <h5 class="text-xl font-semibold text-earth-900">Prompt History</h5>
@@ -201,24 +126,31 @@
             </div>
             <div class="card-body">
                 <div data-prompt-history>
+                    <!-- This wrapper controls spacing between cards -->
                     <div class="space-y-4">
                         {% for prompt in recent_prompts %}
-                        <div class="card prompt-item" data-prompt-id="{{ prompt.id }}">
+                        <div class="card prompt-item mb-4" data-prompt-id="{{ prompt.id }}">
                             <div class="p-4">
                                 <div class="flex justify-between items-start mb-3">
                                     <div class="flex-1">
-                                        <h6 class="font-semibold text-earth-900 mb-1">{{ prompt.description|default:"Untitled Prompt" }}</h6>
-                                        <p class="text-sm text-earth-600">v{{ prompt.version }} • {{ prompt.created_at|date:"M d, Y H:i" }}</p>
+                                        <h6 class="font-semibold text-earth-900 mb-1">
+                                            {{ prompt.description|default:"Untitled Prompt" }}
+                                        </h6>
+                                        <p class="text-sm text-earth-600">
+                                            v{{ prompt.version }} • {{ prompt.created_at|date:"M d, Y H:i" }}
+                                        </p>
                                     </div>
                                     <div x-data="{ open: false }" class="relative">
                                         <button @click="open = !open" class="btn btn-ghost btn-sm">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zM12 13a1 1 0 110-2 1 1 0 010 2zM12 20a1 1 0 110-2 1 1 0 010 2z"></path>
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zM12 13a1 1 0 110-2 1 1 0 010 2zM12 20a1 1 0 110-2 1 1 0 010 2z">
+                                                </path>
                                             </svg>
                                         </button>
                                         <div x-show="open" @click.outside="open = false" x-transition class="dropdown-menu">
-                                            <a class="dropdown-item" href="#" onclick="viewPrompt({{ prompt.id }})">View Details</a>
-                                            <a class="dropdown-item text-red-600" href="#" onclick="deletePrompt({{ prompt.id }})">Delete</a>
+                                            <a class="dropdown-item" href="#" onclick="viewPrompt('{{ prompt.id }}')">View Details</a>
+                                            <a class="dropdown-item text-red-600" href="#" onclick="deletePrompt('{{ prompt.id }}')">Delete</a>
                                         </div>
                                     </div>
                                 </div>
@@ -237,7 +169,9 @@
                         <div class="text-center py-8">
                             <div class="text-earth-400 mb-2">
                                 <svg class="w-12 h-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                                    </path>
                                 </svg>
                             </div>
                             <p class="text-earth-600 font-medium">No prompts evaluated yet.</p>
