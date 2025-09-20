@@ -1,16 +1,12 @@
 {% extends 'myapp/base.html' %}
 {% load static %}
 
-<!-- {% block myheader %}
-  <link rel="stylesheet" href="{% static 'css/myCss.css' %}">
-  <h1><center> Welcome to CoC Gaming Shop </center></h1>
-  
-  
-
-{% endblock myheader %} -->
-
-
 {% block content %}
+<div class="text-center mb-8">
+  <h1 class="text-4xl font-bold text-earth-900 mb-2">Welcome to Prompt Evaluation Suite</h1>
+  <p class="text-earth-700 text-lg">Test and improve your AI prompts with our comprehensive evaluation tools</p>
+</div>
+
 <center>
   {% for row in allrow %}
  

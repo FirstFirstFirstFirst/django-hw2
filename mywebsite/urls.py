@@ -15,23 +15,29 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 
+from django.conf.urls import handler404
 from django.contrib import admin
-from django.urls import include, path
-from myapp.views import userLogin 
 from django.contrib.auth import views
 from django.contrib.staticfiles.urls import static, staticfiles_urlpatterns
+from django.urls import include, path
+
+from myapp.views import userLogin
+
 from . import settings
-from django.conf.urls import handler404
 
 urlpatterns = [
-  path("admin/", admin.site.urls), 
-  path("", include("myapp.urls")),
-  path("login/", userLogin, name='login'),
-  path("logout/", views.LogoutView.as_view(template_name='myapp/logout.html'), name='logout'),
+    path("admin/", admin.site.urls),
+    path("", include("myapp.urls")),
+    path("login/", userLogin, name="login"),
+    path(
+        "logout/",
+        views.LogoutView.as_view(template_name="myapp/logout.html"),
+        name="logout",
+    ),
 ]
 
 urlpatterns += staticfiles_urlpatterns()
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 
-handler404 = 'myapp.views.handler404'
+handler404 = "myapp.views.handler404"

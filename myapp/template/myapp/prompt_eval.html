@@ -1,85 +1,104 @@
 {% extends 'myapp/base.html' %}
 
 {% block myheader %}
-<div class="pricing-header p-3 pb-md-4 mx-auto text-center">
-    <h1 class="display-4 fw-normal">Prompt Task Performance Evaluation</h1>
-    <p class="fs-5 text-muted">Test how reliably your prompt performs across tasks — not prompt writing quality</p>
-    <div class="alert alert-info mx-auto" style="max-width: 800px;">
-        <strong>What this system does:</strong> Measures how well your prompt works when applied to test cases.<br>
-        <strong>What it doesn't do:</strong> Judge whether your prompt text is "well-written" or clearly worded.
+<div class="bg-gradient-to-br from-sage-50 to-sage-100 rounded-xl3 p-8 text-center mb-8">
+    <h1 class="text-4xl font-bold text-earth-900 mb-4">Prompt Task Performance Evaluation</h1>
+    <p class="text-lg text-earth-700 mb-6 max-w-2xl mx-auto">Test how reliably your prompt performs across tasks — not prompt writing quality</p>
+    <div class="alert alert-info max-w-3xl mx-auto">
+        <div class="flex items-start space-x-3">
+            <div class="flex-shrink-0">
+                <svg class="w-5 h-5 text-blue-600 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+                </svg>
+            </div>
+            <div class="text-left">
+                <p><strong>What this system does:</strong> Measures how well your prompt works when applied to test cases.</p>
+                <p class="mt-2"><strong>What it doesn't do:</strong> Judge whether your prompt text is "well-written" or clearly worded.</p>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock myheader %}
 
 {% block content %}
-<div class="row">
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
     <!-- Left Column: Prompt Input -->
-    <div class="col-md-6">
-        <div class="card mb-4">
+    <div class="space-y-6">
+        <div class="card">
             <div class="card-header">
-                <h5 class="card-title">Submit Prompt for Evaluation</h5>
+                <h5 class="text-xl font-semibold text-earth-900">Submit Prompt for Evaluation</h5>
             </div>
             <div class="card-body">
                 <form method="post">
                     {% csrf_token %}
-                    <div class="mb-3">
-                        <label for="description" class="form-label">Description (Optional)</label>
-                        <input type="text" class="form-control" name="description" id="description"
-                               placeholder="Brief description of your prompt">
-                    </div>
-                    <div class="mb-3">
-                        <label for="prompt_text" class="form-label">Prompt Text</label>
-                        <textarea class="form-control" name="prompt_text" id="prompt_text" rows="8"
-                                  placeholder="Example: 'Extract all email addresses from the text and return them as a JSON array'" required></textarea>
-                        <div class="form-text">
-                            <strong>Best for evaluation:</strong> Prompts that produce structured outputs (JSON, Python code, regex patterns) where correctness can be measured objectively.
+                    <div class="space-y-4">
+                        <div>
+                            <label for="description" class="form-label">Description (Optional)</label>
+                            <input type="text" class="form-input" name="description" id="description"
+                                   placeholder="Brief description of your prompt">
+                        </div>
+                        <div>
+                            <label for="prompt_text" class="form-label">Prompt Text</label>
+                            <textarea class="form-textarea" name="prompt_text" id="prompt_text" rows="8"
+                                      placeholder="Example: 'Extract all email addresses from the text and return them as a JSON array'" required></textarea>
+                            <p class="text-sm text-earth-600 mt-2">
+                                <strong>Best for evaluation:</strong> Prompts that produce structured outputs (JSON, Python code, regex patterns) where correctness can be measured objectively.
+                            </p>
                         </div>
                     </div>
 
                     <!-- Example Prompts Section -->
-                    <div class="mb-3">
-                        <div class="card border-info">
-                            <div class="card-header">
-                                <button class="btn btn-link p-0 text-decoration-none" type="button" data-bs-toggle="collapse" data-bs-target="#examplePrompts">
-                                    💡 Example Prompts That Work Well
-                                </button>
-                            </div>
-                            <div class="collapse" id="examplePrompts">
-                                <div class="card-body small">
-                                    <div class="mb-3">
-                                        <strong>JSON Output:</strong><br>
-                                        <code>"Extract all phone numbers from the text and return them as a JSON array"</code>
-                                    </div>
-                                    <div class="mb-3">
-                                        <strong>Python Code:</strong><br>
-                                        <code>"Write a Python function that calculates the area of a circle given the radius"</code>
-                                    </div>
-                                    <div class="mb-0">
-                                        <strong>Regex Pattern:</strong><br>
-                                        <code>"Create a regex pattern that matches valid email addresses"</code>
-                                    </div>
+                    <div x-data="{ open: false }" class="">
+                        <div class="border border-blue-200 rounded-lg">
+                            <button @click="open = !open" class="w-full flex items-center justify-between p-4 text-left bg-blue-50 hover:bg-blue-100 transition-colors rounded-t-lg" type="button">
+                                <span class="flex items-center space-x-2 text-blue-800 font-medium">
+                                    <span>💡</span>
+                                    <span>Example Prompts That Work Well</span>
+                                </span>
+                                <svg class="w-5 h-5 text-blue-600 transition-transform" :class="open ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </button>
+                            <div x-show="open" x-transition class="p-4 space-y-4 text-sm">
+                                <div>
+                                    <strong class="text-earth-900">JSON Output:</strong><br>
+                                    <code class="block mt-1 p-2 bg-sage-50 rounded text-earth-800">"Extract all phone numbers from the text and return them as a JSON array"</code>
+                                </div>
+                                <div>
+                                    <strong class="text-earth-900">Python Code:</strong><br>
+                                    <code class="block mt-1 p-2 bg-sage-50 rounded text-earth-800">"Write a Python function that calculates the area of a circle given the radius"</code>
+                                </div>
+                                <div>
+                                    <strong class="text-earth-900">Regex Pattern:</strong><br>
+                                    <code class="block mt-1 p-2 bg-sage-50 rounded text-earth-800">"Create a regex pattern that matches valid email addresses"</code>
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     <!-- Scoring Methodology Section -->
-                    <div class="mb-3">
-                        <div class="card border-secondary">
-                            <div class="card-header">
-                                <button class="btn btn-link p-0 text-decoration-none" type="button" data-bs-toggle="collapse" data-bs-target="#scoringInfo">
-                                    📊 How Scoring Works
-                                </button>
-                            </div>
-                            <div class="collapse" id="scoringInfo">
-                                <div class="card-body small">
-                                    <h6>Scoring Method:</h6>
-                                    <ul class="mb-2">
+                    <div x-data="{ open: false }" class="">
+                        <div class="border border-earth-300 rounded-lg">
+                            <button @click="open = !open" class="w-full flex items-center justify-between p-4 text-left bg-earth-50 hover:bg-earth-100 transition-colors rounded-t-lg" type="button">
+                                <span class="flex items-center space-x-2 text-earth-800 font-medium">
+                                    <span>📊</span>
+                                    <span>How Scoring Works</span>
+                                </span>
+                                <svg class="w-5 h-5 text-earth-600 transition-transform" :class="open ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </button>
+                            <div x-show="open" x-transition class="p-4 space-y-4 text-sm">
+                                <div>
+                                    <h6 class="font-semibold text-earth-900 mb-2">Scoring Method:</h6>
+                                    <ul class="space-y-1 text-earth-700 list-disc list-inside">
                                         <li><strong>Syntax Check:</strong> Is the output valid JSON/Python/Regex?</li>
                                         <li><strong>Task Accuracy:</strong> Does it correctly solve the test case?</li>
                                     </ul>
-                                    <h6>Score Interpretation:</h6>
-                                    <ul class="mb-0">
+                                </div>
+                                <div>
+                                    <h6 class="font-semibold text-earth-900 mb-2">Score Interpretation:</h6>
+                                    <ul class="space-y-1 text-earth-700 list-disc list-inside">
                                         <li><strong>8-10:</strong> Reliable - consistently generates correct results</li>
                                         <li><strong>5-7:</strong> Inconsistent - works sometimes, fails other times</li>
                                         <li><strong>1-4:</strong> Unreliable - often produces incorrect or invalid results</li>
@@ -88,122 +107,144 @@
                             </div>
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-primary">Evaluate Prompt</button>
+                    <button type="submit" class="btn btn-primary btn-lg w-full">Evaluate Prompt</button>
                 </form>
 
                 {% if error %}
-                <div class="alert alert-danger mt-3">{{ error }}</div>
+                <div class="alert alert-error animate-in">{{ error }}</div>
                 {% endif %}
             </div>
         </div>
 
         <!-- Evaluation Result -->
         {% if evaluation_result %}
-        <div class="card">
-            <div class="card-header bg-success text-white">
-                <h5 class="card-title mb-0">Task Performance Results</h5>
+        <div class="card animate-in">
+            <div class="bg-green-600 text-white p-6 rounded-t-xl">
+                <h5 class="text-xl font-semibold mb-0">Task Performance Results</h5>
             </div>
             <div class="card-body">
-                <div class="row">
-                    <div class="col-6">
-                        <h6>Task Performance Score</h6>
-                        <h2 class="text-primary">{{ evaluation_result.average_score }}/10</h2>
-                        <small class="text-muted">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="text-center md:text-left">
+                        <h6 class="text-earth-700 font-medium mb-2">Task Performance Score</h6>
+                        <div class="text-4xl font-bold text-terracotta-600 mb-2">{{ evaluation_result.average_score }}/10</div>
+                        <div class="flex items-center justify-center md:justify-start space-x-2">
                             {% if evaluation_result.average_score >= 8 %}
-                                🟢 Reliable performance
+                                <span class="w-3 h-3 bg-green-500 rounded-full"></span>
+                                <span class="text-green-700 font-medium">Reliable performance</span>
                             {% elif evaluation_result.average_score >= 5 %}
-                                🟡 Inconsistent performance
+                                <span class="w-3 h-3 bg-amber-500 rounded-full"></span>
+                                <span class="text-amber-700 font-medium">Inconsistent performance</span>
                             {% else %}
-                                🔴 Unreliable performance
+                                <span class="w-3 h-3 bg-red-500 rounded-full"></span>
+                                <span class="text-red-700 font-medium">Unreliable performance</span>
                             {% endif %}
-                        </small>
-                    </div>
-                    <div class="col-6">
-                        <h6>Test Cases Evaluated</h6>
-                        <h2 class="text-secondary">{{ evaluation_result.total_test_cases }}</h2>
-                        <small class="text-muted">Auto-generated test scenarios</small>
-                    </div>
-                </div>
-
-                <div class="alert alert-light mt-3">
-                    <small>
-                        <strong>This score measures:</strong> How reliably your prompt produces correct, valid outputs across different tasks. Higher scores indicate better task performance consistency.
-                    </small>
-                </div>
-
-                <h6 class="mt-4">Test Case Results:</h6>
-                {% for result in evaluation_result.results %}
-                <div class="card mb-2">
-                    <div class="card-body p-3">
-                        <div class="d-flex justify-content-between align-items-center mb-2">
-                            <strong>{{ result.test_case.expected_type|upper }}</strong>
-                            <span class="badge bg-{% if result.result.score >= 8 %}success{% elif result.result.score >= 6 %}warning{% else %}danger{% endif %}">
-                                {{ result.result.score }}/10
-                            </span>
                         </div>
-                        <p class="mb-2"><strong>Input:</strong> {{ result.test_case.input }}</p>
-                        <details>
-                            <summary>View Output & Reasoning</summary>
-                            <div class="mt-2">
-                                <strong>Output:</strong>
-                                <pre class="bg-light p-2 mt-1"><code>{{ result.result.output }}</code></pre>
-                                <strong>Reasoning:</strong>
-                                <p class="mt-1">{{ result.result.reasoning }}</p>
-                            </div>
-                        </details>
+                    </div>
+                    <div class="text-center md:text-left">
+                        <h6 class="text-earth-700 font-medium mb-2">Test Cases Evaluated</h6>
+                        <div class="text-4xl font-bold text-earth-600 mb-2">{{ evaluation_result.total_test_cases }}</div>
+                        <span class="text-earth-500">Auto-generated test scenarios</span>
                     </div>
                 </div>
-                {% endfor %}
+
+                <div class="bg-sage-50 border border-sage-200 rounded-lg p-4 mt-6">
+                    <p class="text-sm text-earth-700">
+                        <strong>This score measures:</strong> How reliably your prompt produces correct, valid outputs across different tasks. Higher scores indicate better task performance consistency.
+                    </p>
+                </div>
+
+                <h6 class="text-lg font-semibold text-earth-900 mt-8 mb-4">Test Case Results:</h6>
+                <div class="space-y-4">
+                    {% for result in evaluation_result.results %}
+                    <div class="card">
+                        <div class="p-4">
+                            <div class="flex justify-between items-center mb-3">
+                                <span class="font-semibold text-earth-900">{{ result.test_case.expected_type|upper }}</span>
+                                <span class="badge {% if result.result.score >= 8 %}badge-success{% elif result.result.score >= 6 %}badge-warning{% else %}badge-error{% endif %}">
+                                    {{ result.result.score }}/10
+                                </span>
+                            </div>
+                            <p class="mb-3 text-earth-700"><strong>Input:</strong> {{ result.test_case.input }}</p>
+                            <details class="group">
+                                <summary class="cursor-pointer text-terracotta-600 hover:text-terracotta-700 font-medium flex items-center space-x-2">
+                                    <span>View Output & Reasoning</span>
+                                    <svg class="w-4 h-4 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                    </svg>
+                                </summary>
+                                <div class="mt-4 space-y-3">
+                                    <div>
+                                        <strong class="text-earth-900">Output:</strong>
+                                        <pre class="bg-sage-50 border border-sage-200 rounded p-3 mt-2 text-sm overflow-x-auto"><code>{{ result.result.output }}</code></pre>
+                                    </div>
+                                    <div>
+                                        <strong class="text-earth-900">Reasoning:</strong>
+                                        <p class="mt-2 text-earth-700">{{ result.result.reasoning }}</p>
+                                    </div>
+                                </div>
+                            </details>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
             </div>
         </div>
         {% endif %}
     </div>
 
     <!-- Right Column: Prompt History -->
-    <div class="col-md-6">
+    <div class="space-y-6">
         <div class="card">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <h5 class="card-title mb-0">Prompt History</h5>
-                <button class="btn btn-sm btn-outline-primary" onclick="refreshPrompts()">Refresh</button>
+            <div class="card-header flex justify-between items-center">
+                <h5 class="text-xl font-semibold text-earth-900">Prompt History</h5>
+                <button class="btn btn-outline btn-sm" onclick="refreshPrompts()">Refresh</button>
             </div>
             <div class="card-body">
-                <div id="promptHistory">
-                    {% for prompt in recent_prompts %}
-                    <div class="card mb-3 prompt-item" data-prompt-id="{{ prompt.id }}">
-                        <div class="card-body p-3">
-                            <div class="d-flex justify-content-between align-items-start mb-2">
-                                <div class="flex-grow-1">
-                                    <h6 class="mb-1">{{ prompt.description|default:"Untitled Prompt" }}</h6>
-                                    <small class="text-muted">v{{ prompt.version }} • {{ prompt.created_at|date:"M d, Y H:i" }}</small>
+                <div data-prompt-history>
+                    <div class="space-y-4">
+                        {% for prompt in recent_prompts %}
+                        <div class="card prompt-item" data-prompt-id="{{ prompt.id }}">
+                            <div class="p-4">
+                                <div class="flex justify-between items-start mb-3">
+                                    <div class="flex-1">
+                                        <h6 class="font-semibold text-earth-900 mb-1">{{ prompt.description|default:"Untitled Prompt" }}</h6>
+                                        <p class="text-sm text-earth-600">v{{ prompt.version }} • {{ prompt.created_at|date:"M d, Y H:i" }}</p>
+                                    </div>
+                                    <div x-data="{ open: false }" class="relative">
+                                        <button @click="open = !open" class="btn btn-ghost btn-sm">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zM12 13a1 1 0 110-2 1 1 0 010 2zM12 20a1 1 0 110-2 1 1 0 010 2z"></path>
+                                            </svg>
+                                        </button>
+                                        <div x-show="open" @click.outside="open = false" x-transition class="dropdown-menu">
+                                            <a class="dropdown-item" href="#" onclick="viewPrompt({{ prompt.id }})">View Details</a>
+                                            <a class="dropdown-item text-red-600" href="#" onclick="deletePrompt({{ prompt.id }})">Delete</a>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="dropdown">
-                                    <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button"
-                                            data-bs-toggle="dropdown">
-                                        Actions
-                                    </button>
-                                    <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="#" onclick="viewPrompt({{ prompt.id }})">View Details</a></li>
-                                        <li><a class="dropdown-item" href="#" onclick="deletePrompt({{ prompt.id }})">Delete</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <p class="mb-2 small">{{ prompt.text|truncatechars:100 }}</p>
-                            <div class="row">
-                                <div class="col-6">
-                                    <small class="text-muted">Test Cases: <span id="tc-count-{{ prompt.id }}">-</span></small>
-                                </div>
-                                <div class="col-6">
-                                    <small class="text-muted">Avg Score: <span id="avg-score-{{ prompt.id }}">-</span></small>
+                                <p class="text-sm text-earth-700 mb-3">{{ prompt.text|truncatechars:100 }}</p>
+                                <div class="grid grid-cols-2 gap-4 text-sm">
+                                    <div class="text-earth-600">
+                                        Test Cases: <span class="font-medium" id="tc-count-{{ prompt.id }}">-</span>
+                                    </div>
+                                    <div class="text-earth-600">
+                                        Avg Score: <span class="font-medium" id="avg-score-{{ prompt.id }}">-</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
+                        {% empty %}
+                        <div class="text-center py-8">
+                            <div class="text-earth-400 mb-2">
+                                <svg class="w-12 h-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                </svg>
+                            </div>
+                            <p class="text-earth-600 font-medium">No prompts evaluated yet.</p>
+                            <p class="text-earth-500">Submit a prompt to get started!</p>
+                        </div>
+                        {% endfor %}
                     </div>
-                    {% empty %}
-                    <div class="text-center text-muted">
-                        <p>No prompts evaluated yet.</p>
-                        <p>Submit a prompt to get started!</p>
-                    </div>
-                    {% endfor %}
                 </div>
             </div>
         </div>
@@ -211,66 +252,75 @@
 </div>
 
 <!-- Modal for viewing prompt details -->
-<div class="modal fade" id="promptModal" tabindex="-1">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
+<div x-data="{ showModal: false, modalContent: '' }" x-on:show-modal.window="showModal = true; modalContent = $event.detail.content">
+    <div x-show="showModal" x-transition.opacity class="fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div x-show="showModal" x-transition.opacity class="modal-overlay" @click="showModal = false"></div>
+        <div x-show="showModal" x-transition.scale.95 class="modal-content relative z-10 max-w-4xl max-h-[80vh] overflow-y-auto">
             <div class="modal-header">
-                <h5 class="modal-title">Prompt Details</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                <h5 class="text-xl font-semibold text-earth-900">Prompt Details</h5>
+                <button @click="showModal = false" class="text-earth-500 hover:text-earth-700 transition-colors">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
             </div>
-            <div class="modal-body" id="promptModalBody">
+            <div class="modal-body" x-html="modalContent">
                 <!-- Content will be loaded dynamically -->
             </div>
         </div>
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-let promptModal = new bootstrap.Modal(document.getElementById('promptModal'));
 
 function refreshPrompts() {
     fetch('/prompt-eval/api/prompts/')
         .then(response => response.json())
         .then(data => {
             // Update prompt history
-            const historyContainer = document.getElementById('promptHistory');
+            const historyContainer = document.querySelector('[data-prompt-history]');
             if (data.prompts.length === 0) {
                 historyContainer.innerHTML = `
-                    <div class="text-center text-muted">
-                        <p>No prompts evaluated yet.</p>
-                        <p>Submit a prompt to get started!</p>
+                    <div class="text-center py-8">
+                        <div class="text-earth-400 mb-2">
+                            <svg class="w-12 h-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                            </svg>
+                        </div>
+                        <p class="text-earth-600 font-medium">No prompts evaluated yet.</p>
+                        <p class="text-earth-500">Submit a prompt to get started!</p>
                     </div>
                 `;
                 return;
             }
 
             historyContainer.innerHTML = data.prompts.map(prompt => `
-                <div class="card mb-3 prompt-item" data-prompt-id="${prompt.id}">
-                    <div class="card-body p-3">
-                        <div class="d-flex justify-content-between align-items-start mb-2">
-                            <div class="flex-grow-1">
-                                <h6 class="mb-1">${prompt.description || 'Untitled Prompt'}</h6>
-                                <small class="text-muted">v${prompt.version} • ${new Date(prompt.created_at).toLocaleDateString()}</small>
+                <div class="card prompt-item" data-prompt-id="${prompt.id}">
+                    <div class="p-4">
+                        <div class="flex justify-between items-start mb-3">
+                            <div class="flex-1">
+                                <h6 class="font-semibold text-earth-900 mb-1">${prompt.description || 'Untitled Prompt'}</h6>
+                                <p class="text-sm text-earth-600">v${prompt.version} • ${new Date(prompt.created_at).toLocaleDateString()}</p>
                             </div>
-                            <div class="dropdown">
-                                <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button"
-                                        data-bs-toggle="dropdown">
-                                    Actions
+                            <div x-data="{ open: false }" class="relative">
+                                <button @click="open = !open" class="btn btn-ghost btn-sm">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zM12 13a1 1 0 110-2 1 1 0 010 2zM12 20a1 1 0 110-2 1 1 0 010 2z"></path>
+                                    </svg>
                                 </button>
-                                <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="#" onclick="viewPrompt(${prompt.id})">View Details</a></li>
-                                    <li><a class="dropdown-item" href="#" onclick="deletePrompt(${prompt.id})">Delete</a></li>
-                                </ul>
+                                <div x-show="open" @click.outside="open = false" x-transition class="dropdown-menu">
+                                    <a class="dropdown-item" href="#" onclick="viewPrompt(${prompt.id})">View Details</a>
+                                    <a class="dropdown-item text-red-600" href="#" onclick="deletePrompt(${prompt.id})">Delete</a>
+                                </div>
                             </div>
                         </div>
-                        <p class="mb-2 small">${prompt.text.substring(0, 100)}${prompt.text.length > 100 ? '...' : ''}</p>
-                        <div class="row">
-                            <div class="col-6">
-                                <small class="text-muted">Test Cases: ${prompt.test_cases_count}</small>
+                        <p class="text-sm text-earth-700 mb-3">${prompt.text.substring(0, 100)}${prompt.text.length > 100 ? '...' : ''}</p>
+                        <div class="grid grid-cols-2 gap-4 text-sm">
+                            <div class="text-earth-600">
+                                Test Cases: <span class="font-medium">${prompt.test_cases_count}</span>
                             </div>
-                            <div class="col-6">
-                                <small class="text-muted">Avg Score: ${prompt.avg_score}</small>
+                            <div class="text-earth-600">
+                                Avg Score: <span class="font-medium">${prompt.avg_score}</span>
                             </div>
                         </div>
                     </div>
@@ -285,45 +335,59 @@ function viewPrompt(promptId) {
     fetch(`/prompt-eval/api/prompts/${promptId}/test-cases/`)
         .then(response => response.json())
         .then(data => {
-            const modalBody = document.getElementById('promptModalBody');
+            let modalContent;
 
             if (data.test_cases.length === 0) {
-                modalBody.innerHTML = '<p>No test cases found for this prompt.</p>';
-                promptModal.show();
-                return;
+                modalContent = '<p class="text-earth-600">No test cases found for this prompt.</p>';
+            } else {
+                modalContent = `
+                    <h6 class="text-lg font-semibold text-earth-900 mb-4">Test Cases and Results:</h6>
+                    <div class="space-y-4">
+                        ${data.test_cases.map(tc => `
+                            <div class="card">
+                                <div class="p-4">
+                                    <div class="flex justify-between items-center mb-3">
+                                        <span class="font-semibold text-earth-900">${tc.expected_type.toUpperCase()}</span>
+                                        ${tc.score ? `<span class="badge ${tc.score >= 8 ? 'badge-success' : tc.score >= 6 ? 'badge-warning' : 'badge-error'}">${tc.score}/10</span>` : '<span class="badge badge-secondary">No Score</span>'}
+                                    </div>
+                                    <p class="mb-3 text-earth-700"><strong>Input:</strong> ${tc.input}</p>
+                                    ${tc.output ? `
+                                        <details class="group">
+                                            <summary class="cursor-pointer text-terracotta-600 hover:text-terracotta-700 font-medium flex items-center space-x-2">
+                                                <span>View Output & Reasoning</span>
+                                                <svg class="w-4 h-4 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                                </svg>
+                                            </summary>
+                                            <div class="mt-4 space-y-3">
+                                                <div>
+                                                    <strong class="text-earth-900">Output:</strong>
+                                                    <pre class="bg-sage-50 border border-sage-200 rounded p-3 mt-2 text-sm overflow-x-auto"><code>${tc.output}</code></pre>
+                                                </div>
+                                                <div>
+                                                    <strong class="text-earth-900">Reasoning:</strong>
+                                                    <p class="mt-2 text-earth-700">${tc.reasoning}</p>
+                                                </div>
+                                            </div>
+                                        </details>
+                                    ` : '<p class="text-earth-500">No output available</p>'}
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
             }
 
-            modalBody.innerHTML = `
-                <h6>Test Cases and Results:</h6>
-                ${data.test_cases.map(tc => `
-                    <div class="card mb-3">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-center mb-2">
-                                <strong>${tc.expected_type.toUpperCase()}</strong>
-                                ${tc.score ? `<span class="badge bg-${tc.score >= 8 ? 'success' : tc.score >= 6 ? 'warning' : 'danger'}">${tc.score}/10</span>` : '<span class="badge bg-secondary">No Score</span>'}
-                            </div>
-                            <p class="mb-2"><strong>Input:</strong> ${tc.input}</p>
-                            ${tc.output ? `
-                                <details>
-                                    <summary>View Output & Reasoning</summary>
-                                    <div class="mt-2">
-                                        <strong>Output:</strong>
-                                        <pre class="bg-light p-2 mt-1"><code>${tc.output}</code></pre>
-                                        <strong>Reasoning:</strong>
-                                        <p class="mt-1">${tc.reasoning}</p>
-                                    </div>
-                                </details>
-                            ` : '<p class="text-muted">No output available</p>'}
-                        </div>
-                    </div>
-                `).join('')}
-            `;
-            promptModal.show();
+            // Dispatch custom event to show modal with content
+            window.dispatchEvent(new CustomEvent('show-modal', {
+                detail: { content: modalContent }
+            }));
         })
         .catch(error => {
             console.error('Error fetching prompt details:', error);
-            document.getElementById('promptModalBody').innerHTML = '<p class="text-danger">Error loading prompt details.</p>';
-            promptModal.show();
+            window.dispatchEvent(new CustomEvent('show-modal', {
+                detail: { content: '<p class="text-red-600">Error loading prompt details.</p>' }
+            }));
         });
 }
 
@@ -345,12 +409,35 @@ function deletePrompt(promptId) {
         if (data.success) {
             refreshPrompts();
         } else {
-            alert('Error deleting prompt: ' + (data.error || 'Unknown error'));
+            // Show error using a modern notification instead of alert
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'fixed top-4 right-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded z-50 animate-in';
+            errorDiv.innerHTML = `
+                <div class="flex items-center space-x-2">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                    </svg>
+                    <span>Error deleting prompt: ${data.error || 'Unknown error'}</span>
+                </div>
+            `;
+            document.body.appendChild(errorDiv);
+            setTimeout(() => errorDiv.remove(), 5000);
         }
     })
     .catch(error => {
         console.error('Error deleting prompt:', error);
-        alert('Error deleting prompt');
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'fixed top-4 right-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded z-50 animate-in';
+        errorDiv.innerHTML = `
+            <div class="flex items-center space-x-2">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                </svg>
+                <span>Error deleting prompt</span>
+            </div>
+        `;
+        document.body.appendChild(errorDiv);
+        setTimeout(() => errorDiv.remove(), 5000);
     });
 }
 

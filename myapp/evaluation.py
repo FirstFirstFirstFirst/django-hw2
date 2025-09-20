@@ -1,23 +1,28 @@
+import ast
 import json
 import re
-import ast
 from statistics import mean
-from .models import Prompt, TestCase, Result
-from django.conf import settings
+
 from anthropic import Anthropic
+from django.conf import settings
+
+from .models import Prompt, Result, TestCase
 
 # Initialize Anthropic client
 client = Anthropic(api_key=settings.CLAUDE_API_KEY)
 model = "claude-3-5-haiku-latest"
+
 
 # Helper functions
 def add_user_message(messages, text):
     user_message = {"role": "user", "content": text}
     messages.append(user_message)
 
+
 def add_assistant_message(messages, text):
     assistant_message = {"role": "assistant", "content": text}
     messages.append(assistant_message)
+
 
 def chat(messages, system=None, temperature=1.0, stop_sequences=[]):
     params = {
@@ -35,6 +40,7 @@ def chat(messages, system=None, temperature=1.0, stop_sequences=[]):
 
     message = client.messages.create(**params)
     return message.content[0].text
+
 
 def generate_dataset(user_prompt_text):
     """Generate evaluation dataset aligned to the user prompt (keeps JSON fence hack)"""
@@ -78,7 +84,6 @@ Output strictly as a JSON array with objects in this shape:
     return json.loads(text)
 
 
-
 def run_prompt(test_case, user_prompt_text):
     """Run the user's prompt with a test case through Claude API"""
     prompt = f"""
@@ -105,12 +110,13 @@ def validate_json(text):
     except json.JSONDecodeError:
         return 0
 
+
 def grade_syntax(response, test_case):
     """Grade the syntax validity of the response"""
     format_type = test_case["format"]
     if format_type == "json":
         return validate_json(response)
-    
+
 
 def grade_by_model(test_case, output):
     """Grade a test case + output using a model"""
@@ -175,8 +181,9 @@ def run_test_case(test_case, user_prompt_text):
         "score": score,
         "reasoning": reasoning,
         "model_grade": model_grade,
-        "syntax_score": syntax_score
+        "syntax_score": syntax_score,
     }
+
 
 def run_evaluation(prompt_text, description="", version="1.0"):
     """
@@ -190,9 +197,7 @@ def run_evaluation(prompt_text, description="", version="1.0"):
 
     # Create and save prompt
     prompt = Prompt.objects.create(
-        text=prompt_text,
-        description=description,
-        version=version
+        text=prompt_text, description=description, version=version
     )
 
     # Generate dataset of test cases
@@ -206,7 +211,7 @@ def run_evaluation(prompt_text, description="", version="1.0"):
         test_case = TestCase.objects.create(
             prompt=prompt,
             input=test_case_data["task"],
-            expected_type=test_case_data["format"]
+            expected_type=test_case_data["format"],
         )
 
         # Run test case evaluation
@@ -218,14 +223,12 @@ def run_evaluation(prompt_text, description="", version="1.0"):
             test_case=test_case,
             output=result_data["output"],
             score=int(result_data["score"]),
-            reasoning=result_data["reasoning"]
+            reasoning=result_data["reasoning"],
         )
 
-        results.append({
-            "test_case": test_case,
-            "result": result,
-            "grade_details": result_data
-        })
+        results.append(
+            {"test_case": test_case, "result": result, "grade_details": result_data}
+        )
 
         total_score += result_data["score"]
 
@@ -236,5 +239,5 @@ def run_evaluation(prompt_text, description="", version="1.0"):
         "prompt": prompt,
         "results": results,
         "average_score": round(average_score, 2),
-        "total_test_cases": len(results)
+        "total_test_cases": len(results),
     }

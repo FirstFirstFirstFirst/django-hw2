@@ -5,121 +5,85 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content="" />
-    <meta
-      name="author"
-      content="Mark Otto, Jacob Thornton, and Bootstrap contributors"
-    />
-    <meta name="generator" content="Hugo 0.84.0" />
-    <title>Pricing example · Bootstrap v5.0</title>
+    <meta name="description" content="Prompt Evaluation Suite - Test and improve your AI prompts" />
+    <meta name="author" content="Prompt Evaluation Suite" />
+    <title>Prompt Evaluation Suite</title>
 
-    <link
-      rel="canonical"
-      href="https://getbootstrap.com/docs/5.0/examples/pricing/"
-    />
+    <!-- Tailwind CSS -->
+    <link href="{% static 'css/output.css' %}" rel="stylesheet" />
 
-    <!-- Bootstrap core CSS -->
-    <link
-      href="https://getbootstrap.com/docs/5.0/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
-      crossorigin="anonymous"
-    />
+    <!-- Custom Font -->
+    <style>
+      @font-face {
+        font-family: 'Stratford-Serial';
+        src: url("{% static 'font/Stratford-Serial Regular.ttf' %}") format('truetype');
+        font-weight: normal;
+        font-style: normal;
+        font-display: swap;
+      }
+    </style>
 
-    <!-- Favicons -->
-    <link
-      rel="apple-touch-icon"
-      href="https://getbootstrap.com/docs/5.0/assets/img/favicons/apple-touch-icon.png"
-      sizes="180x180"
-    />
-    <link
-      rel="icon"
-      href="https://getbootstrap.com/docs/5.0/assets/img/favicons/favicon-32x32.png"
-      sizes="32x32"
-      type="image/png"
-    />
-    <link
-      rel="icon"
-      href="https://getbootstrap.com/docs/5.0/assets/img/favicons/favicon-16x16.png"
-      sizes="16x16"
-      type="image/png"
-    />
-    <link
-      rel="manifest"
-      href="https://getbootstrap.com/docs/5.0/assets/img/favicons/manifest.json"
-    />
-    <link
-      rel="mask-icon"
-      href="https://getbootstrap.com/docs/5.0/assets/img/favicons/safari-pinned-tab.svg"
-      color="#7952b3"
-    />
-    <link
-      rel="icon"
-      href="https://getbootstrap.com/docs/5.0/assets/img/favicons/favicon.ico"
-    />
-    <meta name="theme-color" content="#7952b3" />
-
-    <!-- Custom styles for this template -->
-    <link
-      href="https://getbootstrap.com/docs/5.0/examples/pricing/pricing.css"
-      rel="stylesheet"
-    />
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
   </head>
-  <body>
-    <svg xmlns="http://www.w3.org/2000/svg" style="display: none">
-      <symbol id="check" viewBox="0 0 16 16">
-        <title>Check</title>
-        <path
-          d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"
-        />
-      </symbol>
-    </svg>
-
-    <div class="container py-3">
+  <body class="font-[Stratford-Serial] bg-sage-50 text-earth-900 min-h-screen">
+    <div class="max-w-7xl mx-auto px-4 py-6">
       <header>
-        <div
-          class="d-flex flex-column flex-md-row align-items-center pb-3 mb-4 border-bottom"
-        >
-          <a
-            href="/"
-            class="d-flex align-items-center text-dark text-decoration-none"
-          >
+        <div class="flex flex-col md:flex-row items-center justify-between pb-6 mb-8 border-b border-earth-200">
+          <a href="/" class="flex items-center space-x-3 text-earth-900 hover:text-terracotta-600 transition-colors group">
             <img
               src="{% static 'image/logo.png' %}"
-              alt="logo image"
+              alt="logo"
               width="40"
               height="32"
+              class="group-hover:scale-105 transition-transform"
             />
-            
-            <span class="fs-4">Pricing example</span>
+            <span class="text-2xl font-semibold">Prompt Evaluation Suite</span>
           </a>
 
-          <nav class="d-inline-flex mt-2 mt-md-0 ms-md-auto">
-            <a class="me-3 py-2 text-dark text-decoration-none"
-            href="{% url 'prompt-eval-page' %}">Prompt Eval</a>
+          <nav class="flex items-center space-x-6 mt-4 md:mt-0">
+            <a href="{% url 'prompt-eval-page' %}"
+               class="text-earth-700 hover:text-terracotta-600 font-medium transition-colors">
+              Prompt Eval
+            </a>
+            <a href="{% url 'about-page' %}"
+               class="text-earth-700 hover:text-terracotta-600 font-medium transition-colors">
+              About
+            </a>
+            <a href="{% url 'contact-page' %}"
+               class="text-earth-700 hover:text-terracotta-600 font-medium transition-colors">
+              Contact
+            </a>
             {% if user.profile.usertype == "admin" %}
-              <a class="me-3 py-2 text-dark text-decoration-none"
-              href="{% url 'showcontact-page' %}">show contact</a>
-              <a class="me-3 py-2 text-dark text-decoration-none"
-              href="{% url 'addproduct-page' %}">add product</a>
-            {% else %}
-              <a class="me-3 py-2 text-dark text-decoration-none" href="#">PlayStation5</a>
-              <a class="me-3 py-2 text-dark text-decoration-none" href="#">PlayStation4</a>
-              <a class="me-3 py-2 text-dark text-decoration-none" href="#">Nintendo Switch</a>
+              <a href="{% url 'showcontact-page' %}"
+                 class="text-earth-700 hover:text-terracotta-600 font-medium transition-colors">
+                Show Contact
+              </a>
+              <a href="{% url 'addproduct-page' %}"
+                 class="text-earth-700 hover:text-terracotta-600 font-medium transition-colors">
+                Add Product
+              </a>
             {% endif %}
 
             {% if user.is_authenticated %}
-              <a class="py-2 text-dark text-decoration-none" href="#">Hello, <a href="{% url 'profile-page' %}">{{user.first_name}} </a>[{{user.profile.usertype}}]</a>
-              <a class="py-2 text-dark text-decoration-none" href="{% url 'logout' %}">
-                (Log out)
+              <span class="text-earth-600">
+                Hello,
+                <a href="{% url 'profile-page' %}" class="text-terracotta-600 hover:text-terracotta-700 font-medium">
+                  {{user.first_name}}
+                </a>
+                [{{user.profile.usertype}}]
+              </span>
+              <a href="{% url 'logout' %}"
+                 class="bg-earth-100 hover:bg-earth-200 text-earth-800 px-4 py-2 rounded-lg font-medium transition-colors">
+                Log out
               </a>
             {% else %}
-              <a class="py-2 text-dark text-decoration-none" href="{% url 'login' %}">
+              <a href="{% url 'login' %}"
+                 class="bg-terracotta-600 hover:bg-terracotta-700 text-white px-6 py-2 rounded-lg font-medium transition-colors shadow-sm">
                 Log in
               </a>
             {% endif %}
           </nav>
-
         </div>
 
         {% block myheader %}{% endblock myheader %}
@@ -127,45 +91,45 @@
 
       <main>{% block content %} {% endblock content %}</main>
 
-      <footer class="pt-4 my-md-5 pt-md-5 border-top">
-        <div class="row">
-          <div class="col-12 col-md">
-            <img
-              class="mb-2"
-              src="https://getbootstrap.com/docs/5.0/assets/brand/bootstrap-logo.svg"
-              alt=""
-              width="24"
-              height="19"
-            />
-            <small class="d-block mb-3 text-muted">&copy; 2017–2021</small>
+      <footer class="mt-16 pt-12 border-t border-earth-200">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+          <div class="col-span-1">
+            <div class="flex items-center space-x-2 mb-4">
+              <img
+                src="{% static 'image/logo.png' %}"
+                alt="logo"
+                width="24"
+                height="19"
+              />
+              <span class="font-semibold text-earth-800">Prompt Suite</span>
+            </div>
+            <p class="text-sm text-earth-600">&copy; 2024 Prompt Evaluation Suite. All rights reserved.</p>
           </div>
-          <div class="col-6 col-md">
-            <h5>Features</h5>
-            <ul class="list-unstyled text-small">
-              <li><a class="link-secondary" href="#">Cool stuff</a></li>
-              <li><a class="link-secondary" href="#">Random feature</a></li>
-              <li><a class="link-secondary" href="#">Team feature</a></li>
-              <li>
-                <a class="link-secondary" href="#">Stuff for developers</a>
-              </li>
-              <li><a class="link-secondary" href="#">Another one</a></li>
-              <li><a class="link-secondary" href="#">Last time</a></li>
+          <div>
+            <h5 class="font-semibold text-terracotta-600 mb-4">Features</h5>
+            <ul class="space-y-2 text-sm">
+              <li><a href="{% url 'prompt-eval-page' %}" class="text-earth-600 hover:text-terracotta-600 transition-colors">Prompt Testing</a></li>
+              <li><a href="#" class="text-earth-600 hover:text-terracotta-600 transition-colors">Performance Analytics</a></li>
+              <li><a href="#" class="text-earth-600 hover:text-terracotta-600 transition-colors">Test Case Generation</a></li>
+              <li><a href="#" class="text-earth-600 hover:text-terracotta-600 transition-colors">Score Tracking</a></li>
             </ul>
           </div>
-          <div class="col-6 col-md">
-            <h5>Resources</h5>
-            <ul class="list-unstyled text-small">
-              <li><a class="link-secondary" href="#">Resource</a></li>
-              <li><a class="link-secondary" href="#">Resource name</a></li>
-              <li><a class="link-secondary" href="#">Another resource</a></li>
-              <li><a class="link-secondary" href="#">Final resource</a></li>
+          <div>
+            <h5 class="font-semibold text-terracotta-600 mb-4">Resources</h5>
+            <ul class="space-y-2 text-sm">
+              <li><a href="#" class="text-earth-600 hover:text-terracotta-600 transition-colors">Documentation</a></li>
+              <li><a href="#" class="text-earth-600 hover:text-terracotta-600 transition-colors">API Reference</a></li>
+              <li><a href="#" class="text-earth-600 hover:text-terracotta-600 transition-colors">Best Practices</a></li>
+              <li><a href="#" class="text-earth-600 hover:text-terracotta-600 transition-colors">Tutorials</a></li>
             </ul>
           </div>
-          <div class="col-6 col-md">
-            <h5>About</h5>
-            <ul class="mb-1">
-              <a href="{% url 'about-page' %}">About us</a>
-              <a href="{% url 'contact-page' %}">Contact</a>
+          <div>
+            <h5 class="font-semibold text-terracotta-600 mb-4">Support</h5>
+            <ul class="space-y-2 text-sm">
+              <li><a href="{% url 'about-page' %}" class="text-earth-600 hover:text-terracotta-600 transition-colors">About Us</a></li>
+              <li><a href="{% url 'contact-page' %}" class="text-earth-600 hover:text-terracotta-600 transition-colors">Contact</a></li>
+              <li><a href="#" class="text-earth-600 hover:text-terracotta-600 transition-colors">Help Center</a></li>
+              <li><a href="#" class="text-earth-600 hover:text-terracotta-600 transition-colors">Community</a></li>
             </ul>
           </div>
         </div>
