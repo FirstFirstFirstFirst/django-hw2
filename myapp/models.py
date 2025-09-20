@@ -39,7 +39,51 @@ class Action(models.Model):
 
     def __str__(self):
         return self.contactList.topic
-    
 
-    
 
+class Prompt(models.Model):
+    text = models.TextField()
+    description = models.CharField(max_length=500, null=True, blank=True)
+    version = models.CharField(max_length=50, default='1.0')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.description or 'Prompt'} v{self.version}"
+
+    class Meta:
+        ordering = ['-created_at']
+
+
+class TestCase(models.Model):
+    EXPECTED_TYPE_CHOICES = [
+        ('text', 'Text'),
+        ('json', 'JSON'),
+        ('python', 'Python Code'),
+        ('regex', 'Regex'),
+    ]
+
+    prompt = models.ForeignKey(Prompt, on_delete=models.CASCADE, related_name='test_cases')
+    input = models.TextField()
+    expected_type = models.CharField(max_length=20, choices=EXPECTED_TYPE_CHOICES, default='text')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Test case for {self.prompt.description or 'Prompt'}"
+
+    class Meta:
+        ordering = ['-created_at']
+
+
+class Result(models.Model):
+    prompt = models.ForeignKey(Prompt, on_delete=models.CASCADE)
+    test_case = models.ForeignKey(TestCase, on_delete=models.CASCADE)
+    output = models.TextField()
+    score = models.IntegerField(null=True, blank=True)
+    reasoning = models.TextField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Result for {self.test_case} - Score: {self.score}/10"
+
+    class Meta:
+        ordering = ['-created_at']

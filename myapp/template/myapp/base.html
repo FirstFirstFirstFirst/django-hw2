@@ -95,10 +95,12 @@
           </a>
 
           <nav class="d-inline-flex mt-2 mt-md-0 ms-md-auto">
+            <a class="me-3 py-2 text-dark text-decoration-none"
+            href="{% url 'prompt-eval-page' %}">Prompt Eval</a>
             {% if user.profile.usertype == "admin" %}
-              <a class="me-3 py-2 text-dark text-decoration-none" 
+              <a class="me-3 py-2 text-dark text-decoration-none"
               href="{% url 'showcontact-page' %}">show contact</a>
-              <a class="me-3 py-2 text-dark text-decoration-none" 
+              <a class="me-3 py-2 text-dark text-decoration-none"
               href="{% url 'addproduct-page' %}">add product</a>
             {% else %}
               <a class="me-3 py-2 text-dark text-decoration-none" href="#">PlayStation5</a>

@@ -11,6 +11,9 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+import os
+from dotenv import load_dotenv
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -134,4 +137,7 @@ LOGOUT_REDIRECT_URL = 'login'
 MEDIA_ROOT = BASE_DIR / 'media'
 MEDIA_URL = '/media/'
 
-DEBUG = False
+# Claude API Configuration
+# Add your Claude API key here or set as environment variable
+load_dotenv()
+CLAUDE_API_KEY = os.getenv("ANTHROPIC_API_KEY")  # Set this to your actual Claude API key

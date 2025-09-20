@@ -4,7 +4,7 @@ from .views import aboutUs, contact, home, showContact
 
 from django.shortcuts import render, redirect
 
-from myapp.views import userLogin, userRegist, userProfile, editProfile, actionPage, addProduct
+from myapp.views import userLogin, userRegist, userProfile, editProfile, actionPage, addProduct, prompt_eval, prompt_api, test_case_api
 
 
 urlpatterns = [
@@ -17,6 +17,9 @@ urlpatterns = [
     path('profile', userProfile, name="profile-page"),
     path('editprofile/', editProfile, name="editprofile-page"),
     path('action/<int:cid>', actionPage, name='action-page'),
-    path('addproduct/', addProduct, name="addproduct-page")
+    path('addproduct/', addProduct, name="addproduct-page"),
+    path('prompt-eval/', prompt_eval, name="prompt-eval-page"),
+    path('prompt-eval/api/prompts/', prompt_api, name="prompt-api"),
+    path('prompt-eval/api/prompts/<int:prompt_id>/test-cases/', test_case_api, name="test-case-api"),
 ]
 

@@ -6,6 +6,9 @@ from django.contrib.auth.decorators import login_required
 from .models import *
 from django.core.files.storage import FileSystemStorage
 from django.core.paginator import Paginator
+from .evaluation import run_evaluation
+import json
+from django.http import JsonResponse
 
 def home(request):
     allproduct = Product.objects.all()
@@ -238,3 +241,96 @@ def addProduct(request):
 
 def handler404(request, exception):
     return render(request, 'myapp/404errorPage.html')
+
+def prompt_eval(request):
+    context = {
+        'recent_prompts': Prompt.objects.all()[:10],
+        'evaluation_result': None
+    }
+
+    if request.method == 'POST':
+        data = request.POST.copy()
+        prompt_text = data.get('prompt_text', '').strip()
+        description = data.get('description', '').strip()
+
+        if prompt_text:
+            try:
+                evaluation_result = run_evaluation(
+                    prompt_text=prompt_text,
+                    description=description
+                )
+                context['evaluation_result'] = evaluation_result
+                context['recent_prompts'] = Prompt.objects.all()[:10]
+            except Exception as e:
+                context['error'] = f"Evaluation failed: {str(e)}"
+        else:
+            context['error'] = "Please enter a prompt to evaluate"
+
+    return render(request, 'myapp/prompt_eval.html', context)
+
+def prompt_api(request):
+    if request.method == 'GET':
+        prompts = Prompt.objects.all().order_by('-created_at')
+        prompts_data = []
+        for prompt in prompts:
+            test_cases = TestCase.objects.filter(prompt=prompt)
+            results = Result.objects.filter(prompt=prompt)
+            avg_score = sum(r.score for r in results) / len(results) if results else 0
+
+            prompts_data.append({
+                'id': prompt.id,
+                'text': prompt.text,
+                'description': prompt.description,
+                'version': prompt.version,
+                'created_at': prompt.created_at.isoformat(),
+                'test_cases_count': test_cases.count(),
+                'avg_score': round(avg_score, 2)
+            })
+
+        return JsonResponse({'prompts': prompts_data})
+
+    elif request.method == 'DELETE':
+        try:
+            data = json.loads(request.body)
+            prompt_id = data.get('id')
+            prompt = Prompt.objects.get(id=prompt_id)
+            prompt.delete()
+            return JsonResponse({'success': True})
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=400)
+
+    return JsonResponse({'error': 'Method not allowed'}, status=405)
+
+def test_case_api(request, prompt_id):
+    try:
+        prompt = Prompt.objects.get(id=prompt_id)
+    except Prompt.DoesNotExist:
+        return JsonResponse({'error': 'Prompt not found'}, status=404)
+
+    if request.method == 'GET':
+        test_cases = TestCase.objects.filter(prompt=prompt)
+        test_cases_data = []
+
+        for tc in test_cases:
+            try:
+                result = Result.objects.get(test_case=tc)
+                score = result.score
+                output = result.output
+                reasoning = result.reasoning
+            except Result.DoesNotExist:
+                score = None
+                output = ""
+                reasoning = ""
+
+            test_cases_data.append({
+                'id': tc.id,
+                'input': tc.input,
+                'expected_type': tc.expected_type,
+                'score': score,
+                'output': output,
+                'reasoning': reasoning
+            })
+
+        return JsonResponse({'test_cases': test_cases_data})
+
+    return JsonResponse({'error': 'Method not allowed'}, status=405)
