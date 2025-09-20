@@ -2,7 +2,7 @@ from django.contrib.auth import authenticate, login
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.contrib.auth.models import User
-
+from django.contrib.auth.decorators import login_required
 from .models import *
 
 def home(request):
@@ -55,6 +55,7 @@ def userLogin(request):
 
     return render(request, "myapp/login.html", context)
 
+@login_required(login_url='/login')
 def showContact(request):
     allcontact = ContactList.objects.all()
 
@@ -135,4 +136,37 @@ def actionPage(request, cid):
     context = {}
     contact = ContactList.objects.get(id=cid)
     context['contact'] = contact
+
+    try:
+        action = Action.objects.get(ContactList=contact)
+        context['action'] = action
+    except:
+        pass
+
+    if request.method == 'POST':
+        data = request.POST.copy()
+        actiondetail = data.get('actiondetail')
+
+        if 'save' in data:
+            try:
+                check = Action.objects.get(ContactList=contact)
+                check.actionDetail = actiondetail
+                check.save()
+                context['action'] =check
+            except:
+                new = Action()
+                new.contactList = contact
+                new.actionDetail = actiondetail
+                new.save()
+        elif 'delete' in data:
+            try:
+                contact.delete()
+                return redirect('showcontact-page')
+            except:
+                pass
+        elif 'complete' in data:
+            contact.complete = True
+            contact.save()
+            return redirect('showcontact-page')
+
     return render(request, 'myapp/action.html', context)
