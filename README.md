@@ -21,7 +21,7 @@ python manage.py runserver
 
 ### Applying Model Changes
 
-When models are modified, run the following commands to migrate:
+When models are modified, run the following commands to migrate and apply all migrations:
 
 ```bash
 python manage.py makemigrations

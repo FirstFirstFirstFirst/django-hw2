@@ -4,11 +4,32 @@ from django.shortcuts import redirect, render
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from .models import *
+from django.core.files.storage import FileSystemStorage
+from django.core.paginator import Paginator
 
 def home(request):
     allproduct = Product.objects.all()
-    context = {"pd": allproduct}
-    return render(request, "myapp/home.html", context)
+    product_per_page = 3
+    paginator = Paginator(allproduct, product_per_page)
+    page = request.GET.get('page')
+    allproduct = paginator.get_page(page)
+
+    context = {'allproduct': allproduct}
+    # 1 row 3 cols
+    allrow = []
+    row = []
+    for i, p in enumerate(allproduct):
+        if i % 3 == 0:
+            if i != 0:
+                allrow.append(row)
+                row = []
+            row.append(p)
+        else:
+            row.append(p)
+    allrow.append(row)
+    context['allrow'] = allrow
+
+    return render(request, 'myapp/home.html', context)
 
 def aboutUs(request):
     return render(request, "myapp/aboutus.html")
@@ -170,3 +191,50 @@ def actionPage(request, cid):
             return redirect('showcontact-page')
 
     return render(request, 'myapp/action.html', context)
+
+def addProduct(request):
+    if request.method == 'POST':
+        data = request.POST.copy()
+        title = data.get('title')
+        description = data.get('description')
+        price = data.get('price')
+        quantity = data.get('quantity')
+        instock = data.get('instock')
+
+        new = Product()
+        new.title = title
+        new.description = description
+        new.price = price
+        new.quantity = quantity
+        
+        if instock == 'instock':
+            new.instock = True
+        else:
+            new.instock = False
+
+        if 'picture' in request.FILES:
+            file_image = request.FILES['picture']
+            file_image_name = file_image.name.replace(' ', '_')  # delete space in file name
+            # File system: from django.core.files.storage import FileSystemStorage
+            fs = FileSystemStorage(location='media/product')
+            filename = fs.save(file_image_name, file_image)
+            upload_file_url = fs.url(filename)
+            print('Picture url:', upload_file_url)
+            new.picture = 'product' + upload_file_url[6:]
+
+        if 'specfile' in request.FILES:
+            file_specfile = request.FILES['specfile']
+            file_specfile_name = file_specfile.name.replace(' ', '_')  # delete space in file name
+            # FileSystemStorage: from django.core.files.storage import FileSystemStorage
+            fs = FileSystemStorage(location='media/specfile')
+            filename = fs.save(file_specfile_name, file_specfile)
+            upload_file_url = fs.url(filename)
+            print('Specfile url:', upload_file_url)
+            new.specfile = 'specfile' + upload_file_url[6:]
+
+        new.save()
+            
+    return render(request, 'myapp/addproduct.html')
+
+def handler404(request, exception):
+    return render(request, 'myapp/404errorPage.html')

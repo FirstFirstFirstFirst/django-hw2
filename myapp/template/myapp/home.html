@@ -1,36 +1,95 @@
 {% extends 'myapp/base.html' %}
 {% load static %}
 
-{% block myheader %}
+<!-- {% block myheader %}
   <link rel="stylesheet" href="{% static 'css/myCss.css' %}">
   <h1><center> Welcome to CoC Gaming Shop </center></h1>
   
-  {% if user.profile.usertype == 'VVIP' %}
-      <center> 15% Discount for VVIP member </center>
-  {% elif user.profile.usertype == 'VIP' %}
-      <center> 10% Discount for VIP member </center>
-  {% elif user.profile.usertype == 'MEMBER' %}
-      <center> 5% Discount for member </center>
-  {% elif user.profile.usertype == 'ADMIN' %}
-      <center> Unlimited % Discount for VIP member </center>
-  {% else %}
-      <center> No Discount for non member, contact our staff to get one! </center>
-  {% endif %}
+  
 
-{% endblock myheader %}
+{% endblock myheader %} -->
 
 
 {% block content %}
 <center>
-  <h1>CoC Gaming Shop</h1>
-  {% for data in pd %}
-    <h2>{{ data.title }}</h2>
-    <p>
-      {{ data.description }}<br />
-      Price: {{ data.price }}<br />
-      Stock: {{ data.quantity }}<br />
-    </p>
-    <hr />
+  {% for row in allrow %}
+ 
+  <div class="row row-cols-1 row-cols-md-3 mb-3 text-center">
+    {% for c in row %}
+    <div class="col">
+      <div class="card" style="width: 18rem;">
+        {% if c.picture %}
+        <img src="{{c.picture.url}}"
+             class="card-img-top" width="200" height="300">
+        {% endif %}
+        <div class="card-body">
+          <h5 class="card-title">{{ c.title }}</h5>
+          <p class="card-text">{{ c.price }} ฿</p>
+          <a href="#" class="btn btn-primary">more detail</a>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
   {% endfor %}
 </center>
+<center>
+  <hr>
+  <ul class="pagination">
+
+    {# Case 1: has previous + has next != True #}
+    {% if allproduct.has_previous and allproduct.has_next != True %}
+      <li class="page-item">
+        <a class="page-link" href="?page={{ allproduct.previous_page_number }}"> < </a>
+      </li>
+      <li class="page-item">
+        <a class="page-link" href="?page={{ allproduct.number|add:-1 }}">{{ allproduct.number|add:-1 }}</a>
+      </li>
+      <li class="page-item active">
+        <a class="page-link" href="?page={{ allproduct.number }}">{{ allproduct.number }}</a>
+      </li>
+    {% endif %}
+
+    {# Case 2: has previous + has next #}
+    {% if allproduct.has_previous and allproduct.has_next %}
+      <li class="page-item">
+        <a class="page-link" href="?page={{ allproduct.previous_page_number }}"> < </a>
+      </li>
+      <li class="page-item">
+        <a class="page-link" href="?page={{ allproduct.number|add:-1 }}">{{ allproduct.number|add:-1 }}</a>
+      </li>
+      <li class="page-item active">
+        <a class="page-link" href="?page={{ allproduct.number }}">{{ allproduct.number }}</a>
+      </li>
+      <li class="page-item">
+        <a class="page-link" href="?page={{ allproduct.number|add:1 }}">{{ allproduct.number|add:1 }}</a>
+      </li>
+      <li class="page-item">
+        <a class="page-link" href="?page={{ allproduct.next_page_number }}"> > </a>
+      </li>
+    {% endif %}
+
+    {# Case 3: has next + has previous != True #}
+    {% if allproduct.has_next and allproduct.has_previous != True %}
+      <li class="page-item active">
+        <a class="page-link" href="?page={{ allproduct.number }}">{{ allproduct.number }}</a>
+      </li>
+      <li class="page-item">
+        <a class="page-link" href="?page={{ allproduct.number|add:1 }}">{{ allproduct.number|add:1 }}</a>
+      </li>
+      {% if allproduct.num_pages >= 2 %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ allproduct.number|add:2 }}">{{ allproduct.number|add:2 }}</a>
+        </li>
+      {% endif %}
+      <li class="page-item">
+        <a class="page-link" href="?page={{ allproduct.next_page_number }}"> > </a>
+      </li>
+    {% endif %}
+
+  </ul>
+  <p>page {{ allproduct.number }} from {{ allproduct.paginator.num_pages }}</p>
+</center>
 {% endblock content %}
+
+
