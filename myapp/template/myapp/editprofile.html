@@ -1,39 +1,101 @@
 {% extends 'myapp/base.html' %}
 
 {% block myheader %}
-<h1> Edit Profile </h1>
+<div class="text-center mb-8">
+  <h1 class="text-3xl font-bold text-earth-900 mb-2">Edit Profile</h1>
+  <p class="text-earth-700">Update your account information</p>
+</div>
 {% endblock myheader %}
 
 {% block content %}
-<form method="POST" action="">
-    
-    {% csrf_token %}
-    <div class="form-group">
-        <label for="username">Username:</label>
-        <input type="text" class="form-control" id="username" name="username"
-               value="{{user.username}}" required>
-    </div>
-    <div class="form-group">
-        <label for="firstname">Firstname:</label>
-        <input type="text" class="form-control" id="firstname" name="firstname"
-               value="{{user.first_name}}" required>
-    </div>
-    <div class="form-group">
-        <label for="lastname">Lastname:</label>
-        <input type="text" class="form-control" id="lastname" name="lastname"
-               value="{{user.last_name}}" required>
-    </div>
-    <div class="form-group">
-        <label for="email">Email:</label>
-        <input type="email" class="form-control" id="email" name="email"
-               value="{{user.email}}" required>
-    </div>
-    <div class="form-group">
-        <label for="password">New-Password:</label>
-        <input type="password" class="form-control" id="password" name="password" required>
-    </div>
-    <button type="submit" class="btn btn-primary">
-        Edit Profile
-    </button>
-</form>
+<div class="max-w-2xl mx-auto">
+  <div class="bg-white rounded-lg shadow-md p-8 border border-earth-200">
+    <form method="POST" action="" class="space-y-6">
+      {% csrf_token %}
+
+      <div>
+        <label for="username" class="block text-sm font-medium text-earth-900 mb-2">
+          Username
+        </label>
+        <input
+          type="text"
+          id="username"
+          name="username"
+          value="{{user.username}}"
+          required
+          class="w-full px-3 py-2 border border-earth-300 rounded-md focus:outline-none focus:ring-2 focus:ring-terracotta-500 focus:border-transparent"
+        >
+      </div>
+
+      <div>
+        <label for="firstname" class="block text-sm font-medium text-earth-900 mb-2">
+          First Name
+        </label>
+        <input
+          type="text"
+          id="firstname"
+          name="firstname"
+          value="{{user.first_name}}"
+          required
+          class="w-full px-3 py-2 border border-earth-300 rounded-md focus:outline-none focus:ring-2 focus:ring-terracotta-500 focus:border-transparent"
+        >
+      </div>
+
+      <div>
+        <label for="lastname" class="block text-sm font-medium text-earth-900 mb-2">
+          Last Name
+        </label>
+        <input
+          type="text"
+          id="lastname"
+          name="lastname"
+          value="{{user.last_name}}"
+          required
+          class="w-full px-3 py-2 border border-earth-300 rounded-md focus:outline-none focus:ring-2 focus:ring-terracotta-500 focus:border-transparent"
+        >
+      </div>
+
+      <div>
+        <label for="email" class="block text-sm font-medium text-earth-900 mb-2">
+          Email Address
+        </label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          value="{{user.email}}"
+          required
+          class="w-full px-3 py-2 border border-earth-300 rounded-md focus:outline-none focus:ring-2 focus:ring-terracotta-500 focus:border-transparent"
+        >
+      </div>
+
+      <div>
+        <label for="password" class="block text-sm font-medium text-earth-900 mb-2">
+          New Password
+        </label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          required
+          class="w-full px-3 py-2 border border-earth-300 rounded-md focus:outline-none focus:ring-2 focus:ring-terracotta-500 focus:border-transparent"
+          placeholder="Enter new password"
+        >
+        <p class="text-sm text-earth-600 mt-1">Leave blank to keep current password</p>
+      </div>
+
+      <div class="flex items-center justify-between pt-4">
+        <a href="{% url 'profile-page' %}"
+           class="bg-earth-100 hover:bg-earth-200 text-earth-800 px-6 py-2 rounded-md font-medium transition-colors">
+          Cancel
+        </a>
+        <button
+          type="submit"
+          class="bg-terracotta-600 hover:bg-terracotta-700 text-white px-6 py-2 rounded-md font-medium transition-colors shadow-sm">
+          Save Changes
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
 {% endblock content %}

@@ -1,54 +1,133 @@
 {% extends 'myapp/base.html' %}
 
 {% block myheader %}
-<h1> Add Product </h1>
+<div class="text-center mb-8">
+  <h1 class="text-3xl font-bold text-earth-900 mb-2">Add Product</h1>
+  <p class="text-earth-700">Add a new product to the catalog</p>
+</div>
 {% endblock myheader %}
 
 {% block content %}
+<div class="max-w-2xl mx-auto">
   {% if message %}
-    <h3>{{ message }}</h3>
+    <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-6">
+      <p class="font-medium">{{ message }}</p>
+    </div>
   {% else %}
-    <form method="POST" enctype="multipart/form-data">
-      {% csrf_token %} <!-- Cross-site request forgery -->
-      
-      <div class="form-group">
-        <label for="title">Title:</label>
-        <input type="text" class="form-control" id="title" name="title" required>
-      </div>
+    <div class="bg-white rounded-lg shadow-md p-8 border border-earth-200">
+      <form method="POST" enctype="multipart/form-data" class="space-y-6">
+        {% csrf_token %}
 
-      <div class="form-group">
-        <label for="description">Description:</label>
-        <textarea class="form-control" row="5" id="description" name="description" required></textarea>
-      </div>
+        <div>
+          <label for="title" class="block text-sm font-medium text-earth-900 mb-2">
+            Title <span class="text-red-500">*</span>
+          </label>
+          <input
+            type="text"
+            id="title"
+            name="title"
+            required
+            class="w-full px-3 py-2 border border-earth-300 rounded-md focus:outline-none focus:ring-2 focus:ring-terracotta-500 focus:border-transparent"
+            placeholder="Product title"
+          >
+        </div>
 
-      <div class="form-group">
-        <label for="price">Price:</label>
-        <input type="text" class="form-control" id="price" name="price" required>
-      </div>
+        <div>
+          <label for="description" class="block text-sm font-medium text-earth-900 mb-2">
+            Description <span class="text-red-500">*</span>
+          </label>
+          <textarea
+            id="description"
+            name="description"
+            rows="5"
+            required
+            class="w-full px-3 py-2 border border-earth-300 rounded-md focus:outline-none focus:ring-2 focus:ring-terracotta-500 focus:border-transparent"
+            placeholder="Detailed product description"
+          ></textarea>
+        </div>
 
-      <div class="form-group">
-        <label for="quantity">Quantity:</label>
-        <input type="text" class="form-control" id="quantity" name="quantity" value="0" required>
-      </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label for="price" class="block text-sm font-medium text-earth-900 mb-2">
+              Price <span class="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              id="price"
+              name="price"
+              required
+              class="w-full px-3 py-2 border border-earth-300 rounded-md focus:outline-none focus:ring-2 focus:ring-terracotta-500 focus:border-transparent"
+              placeholder="0.00"
+            >
+          </div>
 
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox" value="yes" id="instock" name="instock">
-        <label class="form-check-label" for="instock">
-          Instock?
-        </label>
-      </div>
+          <div>
+            <label for="quantity" class="block text-sm font-medium text-earth-900 mb-2">
+              Quantity <span class="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              id="quantity"
+              name="quantity"
+              value="0"
+              required
+              class="w-full px-3 py-2 border border-earth-300 rounded-md focus:outline-none focus:ring-2 focus:ring-terracotta-500 focus:border-transparent"
+            >
+          </div>
+        </div>
 
-      <div class="mb-3">
-        <label for="picture" class="form-label">Picture:</label>
-        <input class="form-control" type="file" id="picture" name="picture">
-      </div>
+        <div class="flex items-center">
+          <input
+            type="checkbox"
+            id="instock"
+            name="instock"
+            value="yes"
+            class="w-4 h-4 text-terracotta-600 border-earth-300 rounded focus:ring-terracotta-500"
+          >
+          <label for="instock" class="ml-2 text-sm font-medium text-earth-900">
+            In Stock
+          </label>
+        </div>
 
-      <div class="mb-3">
-        <label for="specfile" class="form-label">Specfile:</label>
-        <input class="form-control" type="file" id="specfile" name="specfile">
-      </div>
+        <div>
+          <label for="picture" class="block text-sm font-medium text-earth-900 mb-2">
+            Product Picture
+          </label>
+          <input
+            type="file"
+            id="picture"
+            name="picture"
+            class="w-full px-3 py-2 border border-earth-300 rounded-md focus:outline-none focus:ring-2 focus:ring-terracotta-500 focus:border-transparent file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-terracotta-50 file:text-terracotta-700 hover:file:bg-terracotta-100"
+          >
+          <p class="text-sm text-earth-600 mt-1">Upload product image</p>
+        </div>
 
-      <button type="submit" class="btn btn-primary">Add Product</button>
-    </form>
+        <div>
+          <label for="specfile" class="block text-sm font-medium text-earth-900 mb-2">
+            Specification File
+          </label>
+          <input
+            type="file"
+            id="specfile"
+            name="specfile"
+            class="w-full px-3 py-2 border border-earth-300 rounded-md focus:outline-none focus:ring-2 focus:ring-terracotta-500 focus:border-transparent file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-terracotta-50 file:text-terracotta-700 hover:file:bg-terracotta-100"
+          >
+          <p class="text-sm text-earth-600 mt-1">Upload product specifications or documentation</p>
+        </div>
+
+        <div class="flex items-center justify-between pt-4">
+          <a href="{% url 'home-page' %}"
+             class="bg-earth-100 hover:bg-earth-200 text-earth-800 px-6 py-2 rounded-md font-medium transition-colors">
+            Cancel
+          </a>
+          <button
+            type="submit"
+            class="bg-terracotta-600 hover:bg-terracotta-700 text-white px-6 py-2 rounded-md font-medium transition-colors shadow-sm">
+            Add Product
+          </button>
+        </div>
+      </form>
+    </div>
   {% endif %}
+</div>
 {% endblock content %}

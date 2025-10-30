@@ -1,28 +1,99 @@
 {% extends 'myapp/base.html' %}
 
 {% block myheader %}
-<h1> My Profile </h1>
+<div class="text-center mb-8">
+  <h1 class="text-3xl font-bold text-earth-900 mb-2">My Profile</h1>
+  <p class="text-earth-700">View and manage your account details</p>
+</div>
 {% endblock myheader %}
 
 {% block content %}
-  <div class="form-group">
-    Username: {{ profile.user.username }}
-  </div>
-  <div class="form-group">
-    Firstname: {{ profile.user.first_name }}
-  </div>
-  <div class="form-group">
-    Lastname: {{ profile.user.last_name }}
-  </div>
-  <div class="form-group">
-    Email: {{ profile.user.email }}
-  </div>
-  <div class="form-group">
-    Point: {{ profile.point }}
-  </div>
-  <div class="form-group">
-    Type: {{ profile.usertype }}
+<div class="max-w-3xl mx-auto">
+  <div class="bg-white rounded-lg shadow-md border border-earth-200 overflow-hidden">
+    <!-- Profile Header -->
+    <div class="bg-gradient-to-r from-terracotta-50 to-sage-50 px-8 py-6 border-b border-earth-200">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center space-x-4">
+          <div class="w-16 h-16 bg-terracotta-600 rounded-full flex items-center justify-center text-white text-2xl font-semibold">
+            {{ profile.user.first_name|first|upper }}{{ profile.user.last_name|first|upper }}
+          </div>
+          <div>
+            <h2 class="text-2xl font-bold text-earth-900">{{ profile.user.first_name }} {{ profile.user.last_name }}</h2>
+            <p class="text-earth-600">@{{ profile.user.username }}</p>
+          </div>
+        </div>
+        <div class="text-right">
+          <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-terracotta-100 text-terracotta-800">
+            {{ profile.usertype|title }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Profile Details -->
+    <div class="p-8 space-y-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <label class="block text-sm font-medium text-earth-600 mb-1">Username</label>
+          <p class="text-lg text-earth-900 font-medium">{{ profile.user.username }}</p>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-earth-600 mb-1">Email Address</label>
+          <p class="text-lg text-earth-900 font-medium">{{ profile.user.email }}</p>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-earth-600 mb-1">First Name</label>
+          <p class="text-lg text-earth-900 font-medium">{{ profile.user.first_name }}</p>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-earth-600 mb-1">Last Name</label>
+          <p class="text-lg text-earth-900 font-medium">{{ profile.user.last_name }}</p>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-earth-600 mb-1">Account Type</label>
+          <p class="text-lg text-earth-900 font-medium">{{ profile.usertype|title }}</p>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-earth-600 mb-1">Points</label>
+          <p class="text-lg text-earth-900 font-medium">{{ profile.point }}</p>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="pt-6 border-t border-earth-200">
+        <a href="{% url 'editprofile-page' %}"
+           class="inline-flex items-center bg-terracotta-600 hover:bg-terracotta-700 text-white px-6 py-2 rounded-md font-medium transition-colors shadow-sm">
+          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+          </svg>
+          Edit Profile
+        </a>
+      </div>
+    </div>
   </div>
 
-  <p><a href="{% url 'editprofile-page' %}">Edit Profile</a></p>
+  <!-- Additional Info Card -->
+  <div class="mt-6 bg-earth-50 rounded-lg p-6 border border-earth-200">
+    <h3 class="text-lg font-medium text-earth-900 mb-3">Account Information</h3>
+    <ul class="space-y-2 text-sm text-earth-700">
+      <li class="flex items-start">
+        <span class="text-terracotta-600 mr-2">•</span>
+        Your account type determines your permissions within the system
+      </li>
+      <li class="flex items-start">
+        <span class="text-terracotta-600 mr-2">•</span>
+        Points are earned through platform activities and contributions
+      </li>
+      <li class="flex items-start">
+        <span class="text-terracotta-600 mr-2">•</span>
+        Keep your email address up to date to receive important notifications
+      </li>
+    </ul>
+  </div>
+</div>
 {% endblock content %}

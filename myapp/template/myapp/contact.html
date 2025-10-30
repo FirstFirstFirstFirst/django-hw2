@@ -1,32 +1,88 @@
 {% extends "myapp/base.html" %}
 
 {% block myheader %}
-<h1 class="text-3xl font-bold text-center mb-6">Contact Us</h1>
+<div class="text-center mb-8">
+  <h1 class="text-3xl font-bold text-earth-900 mb-2">Contact Us</h1>
+  <p class="text-earth-700">We'd love to hear from you</p>
+</div>
 {% endblock myheader %}
 
 {% block content %}
-{% if message %}
-  <h3 class="text-green-700 text-center font-semibold">{{ message }}</h3>
-{% else %}
-<div class="max-w-lg mx-auto bg-white shadow-md rounded-xl p-8">
-  <form method="POST" action="">
-    {% csrf_token %}
-    <div class="mb-4">
-      <label for="topic" class="block font-medium mb-1">Topic:</label>
-      <input type="text" class="w-full border rounded-lg px-3 py-2 focus:ring focus:ring-blue-300" id="topic" name="topic" />
+<div class="max-w-lg mx-auto">
+  {% if message %}
+    <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-6">
+      <p class="font-medium">{{ message }}</p>
     </div>
-    <div class="mb-4">
-      <label for="email" class="block font-medium mb-1">Email:</label>
-      <input type="email" class="w-full border rounded-lg px-3 py-2 focus:ring focus:ring-blue-300" id="email" name="email" />
+  {% else %}
+    <div class="bg-white shadow-md rounded-lg p-8 border border-earth-200">
+      <form method="POST" action="" class="space-y-6">
+        {% csrf_token %}
+
+        <div>
+          <label for="topic" class="block text-sm font-medium text-earth-900 mb-2">
+            Topic
+          </label>
+          <input
+            type="text"
+            id="topic"
+            name="topic"
+            class="w-full px-3 py-2 border border-earth-300 rounded-md focus:outline-none focus:ring-2 focus:ring-terracotta-500 focus:border-transparent"
+            placeholder="What's this about?"
+          >
+        </div>
+
+        <div>
+          <label for="email" class="block text-sm font-medium text-earth-900 mb-2">
+            Email
+          </label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            class="w-full px-3 py-2 border border-earth-300 rounded-md focus:outline-none focus:ring-2 focus:ring-terracotta-500 focus:border-transparent"
+            placeholder="your.email@example.com"
+          >
+        </div>
+
+        <div>
+          <label for="detail" class="block text-sm font-medium text-earth-900 mb-2">
+            Message
+          </label>
+          <textarea
+            id="detail"
+            name="detail"
+            rows="5"
+            class="w-full px-3 py-2 border border-earth-300 rounded-md focus:outline-none focus:ring-2 focus:ring-terracotta-500 focus:border-transparent"
+            placeholder="Tell us more about your inquiry..."
+          ></textarea>
+        </div>
+
+        <button
+          type="submit"
+          class="w-full bg-terracotta-600 hover:bg-terracotta-700 text-white font-semibold py-2 px-4 rounded-md transition-colors shadow-sm">
+          Send Message
+        </button>
+      </form>
     </div>
-    <div class="mb-6">
-      <label for="detail" class="block font-medium mb-1">Detail:</label>
-      <textarea class="w-full border rounded-lg px-3 py-2 focus:ring focus:ring-blue-300" rows="5" id="detail" name="detail"></textarea>
+
+    <!-- Help Section -->
+    <div class="mt-8 bg-earth-50 rounded-lg p-6 border border-earth-200">
+      <h3 class="text-lg font-medium text-earth-900 mb-3">Other Ways to Reach Us</h3>
+      <ul class="space-y-2 text-sm text-earth-700">
+        <li class="flex items-start">
+          <span class="text-terracotta-600 mr-2">•</span>
+          We typically respond within 24 hours
+        </li>
+        <li class="flex items-start">
+          <span class="text-terracotta-600 mr-2">•</span>
+          For urgent matters, please mark your topic accordingly
+        </li>
+        <li class="flex items-start">
+          <span class="text-terracotta-600 mr-2">•</span>
+          Check out our <a href="{% url 'about-page' %}" class="text-terracotta-600 hover:text-terracotta-700 font-medium">About page</a> for more information
+        </li>
+      </ul>
     </div>
-    <button type="submit" class="w-full bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 transition">
-      Submit
-    </button>
-  </form>
+  {% endif %}
 </div>
-{% endif %}
 {% endblock content %}
