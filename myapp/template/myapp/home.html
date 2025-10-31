@@ -28,6 +28,15 @@
         </p>
       </div>
 
+      <!-- Image Thumbnail -->
+      {% if item.has_attachment %}
+        {% if item.prompt.attachment.name|slice:"-4:"|lower == ".png" or item.prompt.attachment.name|slice:"-4:"|lower == ".jpg" or item.prompt.attachment.name|slice:"-5:"|lower == ".jpeg" or item.prompt.attachment.name|slice:"-4:"|lower == ".gif" %}
+        <div class="mb-4 rounded-md overflow-hidden border border-earth-200">
+          <img src="{{ item.prompt.attachment.url }}" alt="Attachment thumbnail" class="w-full h-32 object-cover">
+        </div>
+        {% endif %}
+      {% endif %}
+
       <!-- Stats -->
       <div class="flex items-center justify-between mb-4">
         <div class="flex items-center space-x-4">
@@ -59,8 +68,19 @@
 
       <!-- Footer -->
       <div class="flex items-center justify-between">
-        <div class="text-xs text-earth-500">
-          Created {{ item.prompt.created_at|date:"M j, Y" }}
+        <div class="flex flex-col space-y-1">
+          <div class="text-xs text-earth-500">
+            Created {{ item.prompt.created_at|date:"M j, Y" }}
+          </div>
+          {% if item.has_attachment %}
+          <a href="{% url 'download-attachment' item.prompt.id %}"
+             class="text-xs text-terracotta-600 hover:text-terracotta-700 font-medium flex items-center space-x-1">
+            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+            </svg>
+            <span>Download</span>
+          </a>
+          {% endif %}
         </div>
         <a href="{% url 'prompt-eval-page' %}?prompt_id={{ item.prompt.id }}"
            class="bg-terracotta-600 hover:bg-terracotta-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors">
@@ -89,40 +109,61 @@
 
 <!-- Pagination -->
 {% if allprompts.has_other_pages %}
-  <div class="flex items-center justify-center space-x-1 mb-8">
-    {% if allprompts.has_previous %}
-      <a href="?page={{ allprompts.previous_page_number }}"
-         class="px-3 py-2 text-earth-700 hover:text-terracotta-600 hover:bg-terracotta-50 rounded-md transition-colors">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-        </svg>
-      </a>
-    {% endif %}
-
-    {% for page_num in allprompts.paginator.page_range %}
-      {% if page_num == allprompts.number %}
-        <span class="px-3 py-2 bg-terracotta-600 text-white rounded-md font-medium">{{ page_num }}</span>
-      {% elif page_num >= allprompts.number|add:-2 and page_num <= allprompts.number|add:2 %}
-        <a href="?page={{ page_num }}"
-           class="px-3 py-2 text-earth-700 hover:text-terracotta-600 hover:bg-terracotta-50 rounded-md transition-colors">
-          {{ page_num }}
+  <div class="flex flex-col items-center space-y-4 mb-8">
+    <div class="flex items-center space-x-2">
+      {% if allprompts.has_previous %}
+        <a href="?page={{ allprompts.previous_page_number }}"
+           class="px-3 py-2 text-earth-700 hover:text-white hover:bg-terracotta-600 rounded-md transition-colors border border-earth-200 hover:border-terracotta-600">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+          </svg>
         </a>
+      {% else %}
+        <span class="px-3 py-2 text-earth-300 rounded-md border border-earth-200 cursor-not-allowed">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+          </svg>
+        </span>
       {% endif %}
-    {% endfor %}
 
-    {% if allprompts.has_next %}
-      <a href="?page={{ allprompts.next_page_number }}"
-         class="px-3 py-2 text-earth-700 hover:text-terracotta-600 hover:bg-terracotta-50 rounded-md transition-colors">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-        </svg>
-      </a>
-    {% endif %}
-  </div>
+      {% for page_num in allprompts.paginator.page_range %}
+        {% if page_num == allprompts.number %}
+          <span class="px-4 py-2 bg-terracotta-600 text-white rounded-md font-medium shadow-sm">{{ page_num }}</span>
+        {% elif page_num >= allprompts.number|add:-2 and page_num <= allprompts.number|add:2 %}
+          <a href="?page={{ page_num }}"
+             class="px-4 py-2 text-earth-700 hover:text-white hover:bg-terracotta-600 rounded-md transition-colors border border-earth-200 hover:border-terracotta-600 font-medium">
+            {{ page_num }}
+          </a>
+        {% elif page_num == 1 or page_num == allprompts.paginator.num_pages %}
+          <a href="?page={{ page_num }}"
+             class="px-4 py-2 text-earth-700 hover:text-white hover:bg-terracotta-600 rounded-md transition-colors border border-earth-200 hover:border-terracotta-600 font-medium">
+            {{ page_num }}
+          </a>
+        {% elif page_num == allprompts.number|add:-3 or page_num == allprompts.number|add:3 %}
+          <span class="px-2 py-2 text-earth-400">...</span>
+        {% endif %}
+      {% endfor %}
 
-  <div class="text-center text-earth-600 text-sm">
-    Page {{ allprompts.number }} of {{ allprompts.paginator.num_pages }}
-    ({{ allprompts.paginator.count }} total prompts)
+      {% if allprompts.has_next %}
+        <a href="?page={{ allprompts.next_page_number }}"
+           class="px-3 py-2 text-earth-700 hover:text-white hover:bg-terracotta-600 rounded-md transition-colors border border-earth-200 hover:border-terracotta-600">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </a>
+      {% else %}
+        <span class="px-3 py-2 text-earth-300 rounded-md border border-earth-200 cursor-not-allowed">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </span>
+      {% endif %}
+    </div>
+
+    <div class="text-center text-earth-600 text-sm font-medium">
+      Page {{ allprompts.number }} of {{ allprompts.paginator.num_pages }}
+      <span class="text-earth-500">({{ allprompts.paginator.count }} total prompts)</span>
+    </div>
   </div>
 {% endif %}
 {% endblock content %}

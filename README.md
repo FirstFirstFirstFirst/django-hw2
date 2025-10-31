@@ -4,6 +4,7 @@
 
 Create and activate virtual environment:
 
+py -3.11 -m venv venv
 ```bash
 cd .. && virtualenv venv && .\venv\Scripts\activate && cd mywebsite
 ```

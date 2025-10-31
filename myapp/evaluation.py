@@ -43,7 +43,7 @@ def chat(messages, system=None, temperature=1.0, stop_sequences=[]):
 
 
 def generate_dataset(user_prompt_text):
-    """Generate evaluation dataset aligned to the user prompt (keeps JSON fence hack)"""
+    """Generate evaluation dataset aligned to the user prompt"""
     prompt = f"""
 You are generating evaluation tasks that directly test the user's prompt intent.
 

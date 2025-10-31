@@ -4,6 +4,7 @@ from django.urls import path
 from myapp.views import (
     actionPage,
     addPrompt,
+    download_attachment,
     editProfile,
     prompt_api,
     prompt_eval,
@@ -33,4 +34,5 @@ urlpatterns = [
         test_case_api,
         name="test-case-api",
     ),
+    path("prompt/<int:prompt_id>/download/", download_attachment, name="download-attachment"),
 ]

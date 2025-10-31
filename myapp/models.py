@@ -49,6 +49,7 @@ class Prompt(models.Model):
     description = models.CharField(max_length=500, null=True, blank=True)
     version = models.CharField(max_length=50, default="1.0")
     created_at = models.DateTimeField(auto_now_add=True)
+    attachment = models.FileField(upload_to="prompt_attachments", null=True, blank=True)
 
     def __str__(self):
         return f"{self.description or 'Prompt'} v{self.version}"

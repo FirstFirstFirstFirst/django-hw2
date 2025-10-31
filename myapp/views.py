@@ -14,7 +14,7 @@ from .models import *
 
 def home(request):
     allprompts = Prompt.objects.all()
-    prompts_per_page = 6
+    prompts_per_page = 2
     paginator = Paginator(allprompts, prompts_per_page)
     page = request.GET.get("page")
     allprompts = paginator.get_page(page)
@@ -28,7 +28,8 @@ def home(request):
         prompts_with_scores.append({
             'prompt': prompt,
             'avg_score': round(avg_score, 1) if avg_score else None,
-            'test_cases_count': test_cases_count
+            'test_cases_count': test_cases_count,
+            'has_attachment': bool(prompt.attachment)
         })
 
     context = {
@@ -219,6 +220,15 @@ def addPrompt(request):
             new_prompt.text = text
             new_prompt.description = description
             new_prompt.version = version
+
+            # Handle file upload
+            if 'attachment' in request.FILES:
+                file_attachment = request.FILES['attachment']
+                file_name = file_attachment.name.replace(' ', '_')
+                fs = FileSystemStorage(location='media/prompt_attachments')
+                filename = fs.save(file_name, file_attachment)
+                new_prompt.attachment = 'prompt_attachments/' + filename
+
             new_prompt.save()
             context["message"] = "Prompt added successfully!"
             return redirect("home-page")
@@ -235,22 +245,59 @@ def handler404(request, exception):
 def prompt_eval(request):
     context = {"recent_prompts": Prompt.objects.all()[:10], "evaluation_result": None}
 
+    # Check if viewing/editing specific prompt
+    prompt_id = request.GET.get("prompt_id")
+    if prompt_id:
+        try:
+            selected_prompt = Prompt.objects.get(id=prompt_id)
+            context["selected_prompt"] = selected_prompt
+        except Prompt.DoesNotExist:
+            context["error"] = "Prompt not found"
+
     if request.method == "POST":
         data = request.POST.copy()
-        prompt_text = data.get("prompt_text", "").strip()
-        description = data.get("description", "").strip()
+        action = data.get("action", "evaluate")
 
-        if prompt_text:
+        # Handle prompt editing
+        if action == "edit" and prompt_id:
             try:
-                evaluation_result = run_evaluation(
-                    prompt_text=prompt_text, description=description
-                )
-                context["evaluation_result"] = evaluation_result
-                context["recent_prompts"] = Prompt.objects.all()[:10]
+                prompt = Prompt.objects.get(id=prompt_id)
+                prompt.description = data.get("description", "").strip()
+                prompt.text = data.get("text", "").strip()
+                prompt.version = data.get("version", "1.0").strip()
+
+                # Handle file upload
+                if 'attachment' in request.FILES:
+                    file_attachment = request.FILES['attachment']
+                    file_name = file_attachment.name.replace(' ', '_')
+                    fs = FileSystemStorage(location='media/prompt_attachments')
+                    filename = fs.save(file_name, file_attachment)
+                    prompt.attachment = 'prompt_attachments/' + filename
+
+                prompt.save()
+                context["message"] = "Prompt updated successfully!"
+                context["selected_prompt"] = prompt
+            except Prompt.DoesNotExist:
+                context["error"] = "Prompt not found"
             except Exception as e:
-                context["error"] = f"Evaluation failed: {str(e)}"
+                context["error"] = f"Update failed: {str(e)}"
+
+        # Handle evaluation
         else:
-            context["error"] = "Please enter a prompt to evaluate"
+            prompt_text = data.get("prompt_text", "").strip()
+            description = data.get("description", "").strip()
+
+            if prompt_text:
+                try:
+                    evaluation_result = run_evaluation(
+                        prompt_text=prompt_text, description=description
+                    )
+                    context["evaluation_result"] = evaluation_result
+                    context["recent_prompts"] = Prompt.objects.all()[:10]
+                except Exception as e:
+                    context["error"] = f"Evaluation failed: {str(e)}"
+            else:
+                context["error"] = "Please enter a prompt to evaluate"
 
     return render(request, "myapp/prompt_eval.html", context)
 
@@ -326,3 +373,24 @@ def test_case_api(request, prompt_id):
         return JsonResponse({"test_cases": test_cases_data})
 
     return JsonResponse({"error": "Method not allowed"}, status=405)
+
+
+def download_attachment(request, prompt_id):
+    """Download prompt attachment"""
+    try:
+        prompt = Prompt.objects.get(id=prompt_id)
+        if not prompt.attachment:
+            return HttpResponse("No attachment found", status=404)
+
+        file_path = prompt.attachment.path
+        if not file_path:
+            return HttpResponse("File not found", status=404)
+
+        with open(file_path, 'rb') as f:
+            response = HttpResponse(f.read(), content_type='application/octet-stream')
+            response['Content-Disposition'] = f'attachment; filename="{prompt.attachment.name.split("/")[-1]}"'
+            return response
+    except Prompt.DoesNotExist:
+        return HttpResponse("Prompt not found", status=404)
+    except Exception as e:
+        return HttpResponse(f"Error: {str(e)}", status=500)

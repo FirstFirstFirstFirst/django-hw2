@@ -8,6 +8,91 @@
 {% endblock myheader %}
 
 {% block content %}
+
+{% if message %}
+<div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-6 animate-in">
+    {{ message }}
+</div>
+{% endif %}
+
+{% if selected_prompt %}
+<!-- Edit Prompt Section -->
+<div class="mb-8">
+    <div class="card">
+        <div class="card-header bg-terracotta-600 text-white flex justify-between items-center">
+            <h5 class="text-xl font-semibold text-earth-900">Edit Prompt</h5>
+            <a href="{% url 'prompt-eval-page' %}" class="text-white hover:text-terracotta-100 text-sm">
+                Back to Evaluation
+            </a>
+        </div>
+        <div class="card-body">
+            <form method="POST" enctype="multipart/form-data" class="space-y-4">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="edit">
+
+                <div>
+                    <label for="edit_description" class="form-label">Description</label>
+                    <input type="text" class="form-input" name="description" id="edit_description"
+                           value="{{ selected_prompt.description }}" required>
+                </div>
+
+                <div>
+                    <label for="edit_text" class="form-label">Prompt Text</label>
+                    <textarea class="form-textarea w-full" name="text" id="edit_text" rows="8" required>{{ selected_prompt.text }}</textarea>
+                </div>
+
+                <div>
+                    <label for="edit_version" class="form-label">Version</label>
+                    <input type="text" class="form-input" name="version" id="edit_version"
+                           value="{{ selected_prompt.version }}" required>
+                </div>
+
+                <div>
+                    <label for="edit_attachment" class="form-label">Attachment</label>
+                    {% if selected_prompt.attachment %}
+                    <div class="mb-3">
+                        <div class="flex items-center space-x-3 mb-2">
+                            <span class="text-sm text-earth-700 font-medium">Current file: {{ selected_prompt.attachment.name }}</span>
+                            <a href="{% url 'download-attachment' selected_prompt.id %}"
+                               class="btn btn-outline-primary btn-sm">
+                                <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                </svg>
+                                Download
+                            </a>
+                        </div>
+                        {% if selected_prompt.attachment.name|slice:"-4:"|lower == ".png" or selected_prompt.attachment.name|slice:"-4:"|lower == ".jpg" or selected_prompt.attachment.name|slice:"-5:"|lower == ".jpeg" or selected_prompt.attachment.name|slice:"-4:"|lower == ".gif" %}
+                        <div class="border border-earth-200 rounded-lg p-4 bg-earth-50">
+                            <img src="{{ selected_prompt.attachment.url }}" alt="Attachment preview" class="max-w-full h-auto rounded shadow-sm" style="max-height: 400px;">
+                        </div>
+                        {% else %}
+                        <div class="border border-earth-200 rounded-lg p-4 bg-earth-50 flex items-center space-x-3">
+                            <svg class="w-12 h-12 text-earth-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                            </svg>
+                            <div>
+                                <p class="text-sm font-medium text-earth-700">PDF Document</p>
+                                <p class="text-xs text-earth-500">Click download to view</p>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                    <input type="file" class="form-input" name="attachment" id="edit_attachment"
+                           accept=".pdf,.png,.jpg,.jpeg,.gif">
+                    <p class="form-text">Upload a new file to replace the existing one (optional)</p>
+                </div>
+
+                <div class="flex justify-end space-x-3">
+                    <a href="{% url 'prompt-eval-page' %}" class="btn btn-outline-secondary">Cancel</a>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endif %}
+
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
     <!-- Left Column: Prompt Input -->
     <div class="space-y-6">
@@ -149,6 +234,7 @@
                                             </svg>
                                         </button>
                                         <div x-show="open" @click.outside="open = false" x-transition class="dropdown-menu">
+                                            <a class="dropdown-item" href="?prompt_id={{ prompt.id }}">Edit</a>
                                             <a class="dropdown-item" href="#" onclick="viewPrompt('{{ prompt.id }}')">View Details</a>
                                             <a class="dropdown-item text-red-600" href="#" onclick="deletePrompt('{{ prompt.id }}')">Delete</a>
                                         </div>
@@ -243,6 +329,7 @@ function refreshPrompts() {
                                     </svg>
                                 </button>
                                 <div x-show="open" @click.outside="open = false" x-transition class="dropdown-menu">
+                                    <a class="dropdown-item" href="?prompt_id=${prompt.id}">Edit</a>
                                     <a class="dropdown-item" href="#" onclick="viewPrompt(${prompt.id})">View Details</a>
                                     <a class="dropdown-item text-red-600" href="#" onclick="deletePrompt(${prompt.id})">Delete</a>
                                 </div>
