@@ -140,6 +140,6 @@ MEDIA_URL = "/media/"
 # Claude API Configuration
 # Add your Claude API key here or set as environment variable
 load_dotenv()
-CLAUDE_API_KEY = os.getenv(
-    "ANTHROPIC_API_KEY"
-)  # Set this to your actual Claude API key
+CLAUDE_API_KEY = os.getenv("ANTHROPIC_API_KEY")
+if not CLAUDE_API_KEY and not DEBUG:
+    raise ValueError("ANTHROPIC_API_KEY must be set in production")
