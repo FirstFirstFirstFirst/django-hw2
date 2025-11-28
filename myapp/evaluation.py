@@ -10,7 +10,7 @@ from .models import Prompt, Result, TestCase
 
 # Initialize Anthropic client
 client = Anthropic(api_key=settings.CLAUDE_API_KEY)
-model = "claude-3-5-haiku-latest"
+model = "claude-haiku-4-5"
 
 
 # Helper functions
